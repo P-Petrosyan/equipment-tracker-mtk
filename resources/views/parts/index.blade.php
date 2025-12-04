@@ -37,7 +37,6 @@
         <thead>
             <tr>
                 <th>Code</th>
-                <th>Type</th>
                 <th>Name</th>
                 <th>Price</th>
                 <th>Current Quantity</th>
@@ -51,7 +50,6 @@
                 @foreach($parts as $part)
                     <tr id="part-row-{{ $part->id }}">
                         <td>{{ $part->code }}</td>
-                        <td>{{ $part->type }}</td>
                         <td>{{ $part->name }}</td>
                         <td>{{ number_format($part->unit_price, 2) }}</td>
                         <td>{{ $part->quantity ?? 0 }}</td>
@@ -100,14 +98,11 @@
         .then(data => {
             // Update the current quantity display
             const row = document.getElementById(`part-row-${partId}`);
-            const quantityCell = row.cells[5]; // Current Quantity column
+            const quantityCell = row.cells[3]; // Current Quantity column
             quantityCell.textContent = data.new_quantity;
 
             // Clear the input
             input.value = '';
-
-            // Show success message
-            alert(`Quantity added successfully. New total: ${data.new_quantity}`);
         })
         .catch(error => {
             console.error('Error:', error);

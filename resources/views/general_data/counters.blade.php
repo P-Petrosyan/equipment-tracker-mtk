@@ -194,7 +194,7 @@
         // Add inline form for new part
         let partOptions = '<option value="">Select Part</option>';
         allParts.forEach(part => {
-            partOptions += `<option value="${part.id}">${part.name} (${part.code || 'No Code'})</option>`;
+            partOptions += `<option value="${part.id}">${part.code || 'No Code'} ${part.name} </option>`;
         });
 
         const addPartRow = document.createElement('tr');
@@ -271,7 +271,7 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error updating group');
+            alert('Failed to update group. Please check your input and try again.');
         });
     }
 
@@ -307,7 +307,7 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error deleting group');
+            alert('Failed to delete group. Please try again.');
         });
     }
 
@@ -338,7 +338,7 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error adding group');
+            alert('Failed to add group. Please check that the group name is unique and try again.');
         });
     }
 
@@ -368,7 +368,9 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error adding part');
+            const selectedPart = allParts.find(p => p.id == partId);
+            const partInfo = selectedPart ? `${selectedPart.code || 'No Code'} - ${selectedPart.name}` : 'Selected part';
+            alert(`Part already exists in this group: ${partInfo}`);
         });
     }
 
@@ -389,7 +391,7 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error removing part');
+            alert('Failed to remove part from group. Please try again.');
         });
     }
 
@@ -457,7 +459,7 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error updating equipment');
+            alert('Failed to update equipment. Please check your input and try again.');
         });
     }
 
@@ -486,7 +488,7 @@
         // Store current selections
         const currentEquipmentId = selectedEquipmentId;
         const currentGroupId = selectedGroupId;
-        
+
         // Reload the page but maintain selections via URL hash
         if (currentEquipmentId && currentGroupId) {
             window.location.hash = `equipment-${currentEquipmentId}-group-${currentGroupId}`;
@@ -502,13 +504,13 @@
             const hash = window.location.hash.substring(1);
             const equipmentMatch = hash.match(/equipment-(\d+)/);
             const groupMatch = hash.match(/group-(\d+)/);
-            
+
             if (equipmentMatch) {
                 const equipmentId = parseInt(equipmentMatch[1]);
                 const equipmentRow = document.querySelector(`[data-id="${equipmentId}"]`);
                 if (equipmentRow) {
                     selectEquipment(equipmentId, equipmentRow);
-                    
+
                     if (groupMatch) {
                         const groupId = parseInt(groupMatch[1]);
                         setTimeout(() => {
