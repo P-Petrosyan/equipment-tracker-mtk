@@ -1,8 +1,15 @@
 <div class="section-header">Դետալներ (Parts)</div>
-<div style="margin-bottom: 10px;">
+<div style="margin-bottom: 10px; display: flex; gap: 10px;">
     <a href="{{ route('parts.export') }}" class="btn btn-sm btn-success">
         <i class="fa-solid fa-file-excel"></i> Export to Excel
     </a>
+    <form action="{{ route('parts.import') }}" method="POST" enctype="multipart/form-data" style="display: inline-flex; gap: 5px;">
+        @csrf
+        <input type="file" name="file" accept=".xlsx,.xls" required class="form-control" style="width: auto;">
+        <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fa-solid fa-file-import"></i> Import Excel
+        </button>
+    </form>
 </div>
 <div class="data-table-wrapper">
     <table class="ms-table">

@@ -83,6 +83,7 @@ Route::patch('/parts/{part}', [PartController::class, 'update'])->name('parts.up
 Route::delete('/parts/{part}', [PartController::class, 'destroy'])->name('parts.destroy');
 Route::post('/parts/{part}/add-quantity', [PartController::class, 'addQuantity'])->name('parts.add-quantity');
 Route::get('/parts/export', [PartController::class, 'export'])->name('parts.export');
+Route::post('/parts/import', [PartController::class, 'import'])->name('parts.import');
 
 Route::post('/equipment-part-groups', [\App\Http\Controllers\EquipmentPartGroupController::class, 'store'])->name('equipment-part-groups.store');
 Route::patch('/equipment-part-groups/{equipmentPartGroup}', [\App\Http\Controllers\EquipmentPartGroupController::class, 'update'])->name('equipment-part-groups.update');

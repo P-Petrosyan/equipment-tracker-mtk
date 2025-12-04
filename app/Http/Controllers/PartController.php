@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Part;
 use App\Exports\PartsExport;
+use App\Imports\PartsImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -79,5 +80,16 @@ class PartController extends Controller
     public function export()
     {
         return Excel::download(new PartsExport, 'parts_export.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
+
+        Excel::import(new PartsImport, $request->file('file'));
+
+        return redirect()->route('general-data', 'parts')->with('success', 'Parts imported successfully.');
     }
 }
