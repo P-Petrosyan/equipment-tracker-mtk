@@ -9,10 +9,8 @@ class Part extends Model
     protected $fillable = [
         'code',
         'name',
-        'type',
         'quantity',
         'unit_price',
-        'drawing_number',
         'measure_unit',
         'description'
     ];

@@ -4,13 +4,10 @@
         <thead>
         <tr>
             <th>Region</th>
-            <th>RegionHF</th>
             <th>Address</th>
-            <th>Bank</th>
-            <th>RegionR</th>
             <th>Tnoren</th>
             <th>Hashvapah</th>
-            <th>HVHH (Tax ID)</th>
+            <th>Notes</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -19,13 +16,10 @@
             @foreach($data['partners'] as $partner)
                 <tr onclick="selectPartner({{ $partner->id }}, this)" data-id="{{ $partner->id }}" id="partner-row-{{ $partner->id }}">
                     <td class="editable" data-field="region">{{ $partner->region }}</td>
-                    <td class="editable" data-field="region_hf">{{ $partner->region_hf }}</td>
                     <td class="editable" data-field="address">{{ $partner->address }}</td>
-                    <td class="editable" data-field="bank">{{ $partner->bank }}</td>
-                    <td class="editable" data-field="region_r">{{ $partner->region_r }}</td>
                     <td class="editable" data-field="tnoren">{{ $partner->tnoren }}</td>
                     <td class="editable" data-field="hashvapah">{{ $partner->hashvapah }}</td>
-                    <td class="editable" data-field="tax_id">{{ $partner->tax_id }}</td>
+                    <td class="editable" data-field="notes">{{ $partner->notes }}</td>
                     <td>
                         <button onclick="editPartner({{ $partner->id }}, event)" class="text-blue-600 hover:underline edit-btn">Edit</button>
                         <button onclick="savePartner({{ $partner->id }}, event)" class="text-green-600 hover:underline save-btn" style="display:none;">Save</button>
@@ -47,16 +41,7 @@
                     <input type="text" name="region" placeholder="Region" class="border p-1 w-full" required>
                 </td>
                 <td>
-                    <input type="text" name="region_hf" placeholder="RegionHF" class="border p-1 w-full">
-                </td>
-                <td>
                     <input type="text" name="address" placeholder="Address" class="border p-1 w-full">
-                </td>
-                <td>
-                    <input type="text" name="bank" placeholder="Bank" class="border p-1 w-full">
-                </td>
-                <td>
-                    <input type="text" name="region_r" placeholder="RegionR" class="border p-1 w-full">
                 </td>
                 <td>
                     <input type="text" name="tnoren" placeholder="Tnoren" class="border p-1 w-full">
@@ -65,7 +50,7 @@
                     <input type="text" name="hashvapah" placeholder="Hashvapah" class="border p-1 w-full">
                 </td>
                 <td>
-                    <input type="text" name="tax_id" placeholder="Tax ID" class="border p-1 w-full">
+                    <input type="text" name="notes" placeholder="Notes" class="border p-1 w-full">
                 </td>
                 <td>
                     <button type="submit" class="text-green-600 font-bold">Add</button>
@@ -304,7 +289,7 @@
         if (window.location.hash) {
             const hash = window.location.hash.substring(1);
             const partnerMatch = hash.match(/partner-(\d+)/);
-            
+
             if (partnerMatch) {
                 const partnerId = parseInt(partnerMatch[1]);
                 const partnerRow = document.querySelector(`[data-id="${partnerId}"]`);
@@ -320,7 +305,7 @@
     // Restore partner selection on page load
     document.addEventListener('DOMContentLoaded', restorePartnerSelection);
     window.addEventListener('load', restorePartnerSelection);
-    
+
     // Also check immediately in case DOM is already loaded
     if (document.readyState === 'loading') {
         // DOM is still loading

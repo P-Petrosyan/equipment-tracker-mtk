@@ -14,7 +14,6 @@ class EquipmentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'internal_id' => 'nullable|string|max:255',
             'name' => 'nullable|string|max:255',
             'stug_price' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
@@ -36,7 +35,6 @@ class EquipmentController extends Controller
     public function update(Request $request, Equipment $equipment)
     {
         $validated = $request->validate([
-            'internal_id' => 'nullable|string|max:255',
             'name' => 'nullable|string|max:255',
             'stug_price' => 'nullable|string|max:255',
             'notes' => 'nullable|string',

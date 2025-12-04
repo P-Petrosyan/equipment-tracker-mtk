@@ -13,9 +13,9 @@ class PartnerController extends Controller
 
         if ($request->has('search')) {
             $search = $request->get('search');
-            $query->where('account_number', 'like', "%{$search}%")
+            $query->where('tnoren', 'like', "%{$search}%")
                 ->orWhere('region', 'like', "%{$search}%")
-                ->orWhere('bank', 'like', "%{$search}%");
+                ->orWhere('address', 'like', "%{$search}%");
         }
 
         $partners = $query->latest()->paginate(10);
@@ -32,14 +32,9 @@ class PartnerController extends Controller
     {
         $validated = $request->validate([
             'region' => 'required|string|max:255',
-            'region_hf' => 'nullable|string|max:255',
             'address' => 'nullable|string',
-            'bank' => 'nullable|string|max:255',
-            'account_number' => 'nullable|string|max:255',
-            'region_r' => 'nullable|string|max:255',
             'tnoren' => 'nullable|string|max:255',
             'hashvapah' => 'nullable|string|max:255',
-            'tax_id' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
         ]);
 
@@ -67,14 +62,9 @@ class PartnerController extends Controller
     {
         $validated = $request->validate([
             'region' => 'sometimes|required|string|max:255',
-            'region_hf' => 'nullable|string|max:255',
             'address' => 'nullable|string',
-            'bank' => 'nullable|string|max:255',
-            'account_number' => 'nullable|string|max:255',
-            'region_r' => 'nullable|string|max:255',
             'tnoren' => 'nullable|string|max:255',
             'hashvapah' => 'nullable|string|max:255',
-            'tax_id' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
         ]);
 
@@ -98,14 +88,9 @@ class PartnerController extends Controller
     {
         $validated = $request->validate([
             'region' => 'sometimes|required|string|max:255',
-            'region_hf' => 'nullable|string|max:255',
             'address' => 'nullable|string',
-            'bank' => 'nullable|string|max:255',
-            'account_number' => 'nullable|string|max:255',
-            'region_r' => 'nullable|string|max:255',
             'tnoren' => 'nullable|string|max:255',
             'hashvapah' => 'nullable|string|max:255',
-            'tax_id' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
         ]);
 

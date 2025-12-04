@@ -4,10 +4,8 @@
         <thead>
             <tr>
                 <th>Code</th>
-                <th>Type</th>
                 <th>Name</th>
                 <th>Price</th>
-                <th>Drawing Number</th>
                 <th>Quantity</th>
                 <th>Measure Unit</th>
                 <th>Actions</th>
@@ -18,10 +16,8 @@
                 @foreach($data['parts'] as $part)
                     <tr id="part-row-{{ $part->id }}">
                         <td class="editable" data-field="code">{{ $part->code }}</td>
-                        <td class="editable" data-field="type">{{ $part->type }}</td>
                         <td class="editable" data-field="name">{{ $part->name }}</td>
                         <td class="editable" data-field="unit_price">{{ $part->unit_price }}</td>
-                        <td class="editable" data-field="drawing_number">{{ $part->drawing_number }}</td>
                         <td data-field="quantity">{{ $part->quantity?? 0 }}</td>
                         <td class="editable" data-field="measure_unit">{{ $part->measure_unit }}</td>
                         <td>
@@ -44,16 +40,10 @@
                         <input type="text" name="code" placeholder="Code" class="border p-1 w-full" required>
                     </td>
                     <td>
-                        <input type="text" name="type" placeholder="Type" class="border p-1 w-full" required>
-                    </td>
-                    <td>
                         <input type="text" name="name" placeholder="Name" class="border p-1 w-full" required>
                     </td>
                     <td>
                         <input type="number" step="0.01" name="unit_price" placeholder="Price" class="border p-1 w-full" required>
-                    </td>
-                    <td>
-                        <input type="text" name="drawing_number" placeholder="Drawing Number" class="border p-1 w-full">
                     </td>
                     <td>
                         <input type="number" name="quantity" placeholder="Quantity" class="border p-1 w-full">

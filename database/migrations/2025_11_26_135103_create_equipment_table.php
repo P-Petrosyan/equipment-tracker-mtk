@@ -12,9 +12,8 @@ return new class extends Migration {
     {
         Schema::create('equipment', function (Blueprint $table) {
             $table->id();
-            $table->string('internal_id')->nullable();
             $table->string('name')->nullable();
-            $table->string('stug_price')->nullable();
+            $table->decimal('stug_price', 10, 2)->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
         });

@@ -8,14 +8,10 @@ class Partner extends Model
 {
     protected $fillable = [
         'region',
-        'region_hf',
         'address',
-        'bank',
-        'region_r',
         'tnoren',
         'hashvapah',
         'account_number',
-        'tax_id',
         'notes'
     ];
 

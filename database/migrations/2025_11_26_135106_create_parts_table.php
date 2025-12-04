@@ -14,10 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->string('code')->nullable();
             $table->string('name');
-            $table->string('type')->nullable();
             $table->integer('quantity')->nullable();
             $table->decimal('unit_price', 10, 2)->default(0);
-            $table->string('drawing_number')->nullable();
             $table->string('measure_unit')->default('հատ');
             $table->text('description')->nullable();
             $table->timestamps();

@@ -16,10 +16,8 @@ class PartController extends Controller
     {
         $validated = $request->validate([
             'code' => 'required|string|max:255',
-            'type' => 'required|string|max:255',
             'name' => 'required|string|max:255',
             'unit_price' => 'required|numeric|min:0',
-            'drawing_number' => 'nullable|string|max:255',
             'quantity' => 'nullable|integer|min:1',
             'measure_unit' => 'string|max:255',
         ]);
@@ -33,10 +31,8 @@ class PartController extends Controller
     {
         $validated = $request->validate([
             'code' => 'sometimes|required|string|max:255',
-            'type' => 'sometimes|required|string|max:255',
             'name' => 'sometimes|required|string|max:255',
             'unit_price' => 'sometimes|required|numeric|min:0',
-            'drawing_number' => 'nullable|string|max:255',
             'quantity' => 'nullable|integer|min:1',
             'measure_unit' => 'sometimes|required|string|max:255',
         ]);
@@ -64,7 +60,7 @@ class PartController extends Controller
 
         $currentQuantity = $part->quantity ?? 0;
         $newQuantity = $currentQuantity + $request->add_quantity;
-        
+
         $part->update(['quantity' => $newQuantity]);
 
         if ($request->expectsJson()) {
