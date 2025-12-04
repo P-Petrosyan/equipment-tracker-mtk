@@ -1,4 +1,9 @@
 <div class="section-header">Դետալներ (Parts)</div>
+<div style="margin-bottom: 10px;">
+    <a href="{{ route('parts.export') }}" class="btn btn-sm btn-success">
+        <i class="fa-solid fa-file-excel"></i> Export to Excel
+    </a>
+</div>
 <div class="data-table-wrapper">
     <table class="ms-table">
         <thead>
@@ -166,4 +171,6 @@
         row.querySelector('.cancel-btn').style.display = 'none';
     }
     @endif
+
+
 </script>

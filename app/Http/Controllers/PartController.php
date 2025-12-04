@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Part;
+use App\Exports\PartsExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PartController extends Controller
 {
@@ -72,5 +74,10 @@ class PartController extends Controller
         }
 
         return redirect()->back()->with('success', 'Quantity added successfully.');
+    }
+
+    public function export()
+    {
+        return Excel::download(new PartsExport, 'parts_export.xlsx');
     }
 }
