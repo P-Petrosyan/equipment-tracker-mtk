@@ -54,7 +54,7 @@
         <div class="dashboard-grid">
             <!-- Left Column -->
             <div class="dashboard-column">
-                <a href="{{ route('partners.index') }}" class="dashboard-btn">
+                <a href="{{ route('works.index') }}" class="dashboard-btn">
                     Բազա
                 </a>
 {{--                <a href="{{ route('equipment.index') }}" class="dashboard-btn">--}}
@@ -73,9 +73,9 @@
                 <a href="{{ route('reports.index') }}" class="dashboard-btn">
                     Հաշվետվություններ
                 </a>
-{{--                <a href="{{ route('work-orders.index') }}" class="dashboard-btn">--}}
-{{--                    Կատարողական<br>ակտեր--}}
-{{--                </a>--}}
+                <a href="" class="dashboard-btn">
+                    Կատարողական<br>ակտեր
+                </a>
                 <a href="{{ route('parts.index') }}" class="dashboard-btn">
                     Դետալների մուտք
                 </a>

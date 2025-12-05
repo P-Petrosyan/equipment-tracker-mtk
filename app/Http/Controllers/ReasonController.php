@@ -18,6 +18,21 @@ class ReasonController extends Controller
         return redirect()->route('general-data', 'reasons')->with('success', 'Reason added successfully.');
     }
 
+    public function update(Request $request, Reason $reason)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $reason->update($validated);
+
+        if ($reason) {
+            return response()->json(['success' => true]);
+        }
+
+        return redirect()->route('general-data', 'reasons')->with('success', 'Reason updated successfully.');
+    }
+
     public function destroy(Reason $reason)
     {
         $reason->delete();

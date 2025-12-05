@@ -26,7 +26,7 @@
 }
 </style>
 
-<div class="header mb-2">
+<div class="header">
     <h1 class="page-title" style="font-size: 1.2rem;">Դետալների մուտք (Parts Entry)</h1>
     <a href="{{ route('dashboard') }}" class="btn btn-sm btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Գլխավոր էջ

@@ -360,7 +360,12 @@
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Part already exists in group');
+        })
         .then(data => {
             document.getElementById('new-part-select').value = '';
             document.getElementById('new-part-quantity').value = '';

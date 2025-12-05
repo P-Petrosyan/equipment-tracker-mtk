@@ -48,12 +48,26 @@ class EquipmentPartGroupController extends Controller
             'quantity' => $request->quantity,
         ]);
 
+        $this->updateGroupTotalPrice($equipmentPartGroup);
+
         return response()->json(['success' => true]);
     }
 
     public function removePart(EquipmentPartGroup $equipmentPartGroup, $partId)
     {
         $equipmentPartGroup->parts()->detach($partId);
+        $this->updateGroupTotalPrice($equipmentPartGroup);
         return response()->json(['success' => true]);
+    }
+
+    private function updateGroupTotalPrice(EquipmentPartGroup $equipmentPartGroup)
+    {
+        $totalPrice = $equipmentPartGroup->parts()->withPivot('quantity')
+            ->get()
+            ->sum(function ($part) {
+                return $part->unit_price * $part->pivot->quantity;
+            });
+
+        $equipmentPartGroup->update(['total_price' => $totalPrice]);
     }
 }

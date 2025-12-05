@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\PositionController;
 use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\PartController;
+use App\Http\Controllers\WorkController;
 use App\Http\Controllers\ReportController;
 use App\Models\Defect;
 use App\Models\Equipment;
@@ -66,15 +68,19 @@ Route::post('/partner-structures', [\App\Http\Controllers\PartnerStructureContro
 Route::delete('/partner-structures/{partnerStructure}', [\App\Http\Controllers\PartnerStructureController::class, 'destroy'])->name('partner-structures.destroy');
 
 Route::post('/reasons', [\App\Http\Controllers\ReasonController::class, 'store'])->name('reasons.store');
+Route::patch('/reasons/{reason}', [\App\Http\Controllers\ReasonController::class, 'update'])->name('reasons.update');
 Route::delete('/reasons/{reason}', [\App\Http\Controllers\ReasonController::class, 'destroy'])->name('reasons.destroy');
 
 Route::post('/defects', [\App\Http\Controllers\DefectController::class, 'store'])->name('defects.store');
+Route::patch('/defects/{defect}', [\App\Http\Controllers\DefectController::class, 'update'])->name('defects.update');
 Route::delete('/defects/{defect}', [\App\Http\Controllers\DefectController::class, 'destroy'])->name('defects.destroy');
 
 Route::post('/positions', [\App\Http\Controllers\PositionController::class, 'store'])->name('positions.store');
+Route::patch('/positions/{position}', [PositionController::class, 'update'])->name('positions.update');
 Route::delete('/positions/{position}', [\App\Http\Controllers\PositionController::class, 'destroy'])->name('positions.destroy');
 
 Route::post('/namings', [\App\Http\Controllers\NamingController::class, 'store'])->name('namings.store');
+Route::patch('/namings/{naming}', [\App\Http\Controllers\NamingController::class, 'update'])->name('namings.update');
 Route::delete('/namings/{naming}', [\App\Http\Controllers\NamingController::class, 'destroy'])->name('namings.destroy');
 
 Route::get('/parts', [PartController::class, 'index'])->name('parts.index');
@@ -90,6 +96,15 @@ Route::patch('/equipment-part-groups/{equipmentPartGroup}', [\App\Http\Controlle
 Route::delete('/equipment-part-groups/{equipmentPartGroup}', [\App\Http\Controllers\EquipmentPartGroupController::class, 'destroy'])->name('equipment-part-groups.destroy');
 Route::post('/equipment-part-groups/{equipmentPartGroup}/parts', [\App\Http\Controllers\EquipmentPartGroupController::class, 'addPart'])->name('equipment-part-groups.add-part');
 Route::delete('/equipment-part-groups/{equipmentPartGroup}/parts/{partId}', [\App\Http\Controllers\EquipmentPartGroupController::class, 'removePart'])->name('equipment-part-groups.remove-part');
+
+Route::get('/works', [WorkController::class, 'index'])->name('works.index');
+Route::get('/works/create', [WorkController::class, 'create'])->name('works.create');
+Route::post('/works', [WorkController::class, 'store'])->name('works.store');
+Route::get('/works/{work}/edit', [WorkController::class, 'edit'])->name('works.edit');
+Route::patch('/works/{work}', [WorkController::class, 'update'])->name('works.update');
+Route::delete('/works/{work}', [WorkController::class, 'destroy'])->name('works.destroy');
+Route::get('/works/history/{serial}', [WorkController::class, 'history'])->name('works.history');
+Route::get('/works/{work}/print-preview', [WorkController::class, 'printPreview'])->name('works.print-preview');
 
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 Route::post('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');

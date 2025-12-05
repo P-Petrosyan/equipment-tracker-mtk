@@ -19,6 +19,22 @@ class NamingController extends Controller
         return redirect()->route('general-data', 'namings')->with('success', 'Naming added successfully.');
     }
 
+    public function update(Request $request, Naming $naming)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'text' => 'nullable|string',
+        ]);
+
+        $naming->update($validated);
+
+        if ($naming) {
+            return response()->json(['success' => true]);
+        }
+
+        return redirect()->route('general-data', 'namings')->with('success', 'Naming updated successfully.');
+    }
+
     public function destroy(Naming $naming)
     {
         $naming->delete();
