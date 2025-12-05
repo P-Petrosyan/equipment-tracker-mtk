@@ -97,15 +97,13 @@
                 <input type="checkbox" name="non_repairable" value="1" {{ $work->non_repairable ? 'checked' : '' }} onchange="updateConclusionNumber()">
 
                 <div>
-                    @if($work->non_repairable && $work->conclusion_number)
+{{--                    @if($work->non_repairable && $work->conclusion_number)--}}
                         <a href="{{ route('works.print-preview', $work) }}" target="_blank" class="btn btn-sm btn-info">
                             <i class="fa-solid fa-print"></i> Print Preview
                         </a>
-                    @endif
+{{--                    @endif--}}
                 </div>
             </div>
-
-
 
             <div>
                 <label>Conclusion Number:</label>
