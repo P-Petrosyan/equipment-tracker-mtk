@@ -14,7 +14,7 @@
     @endif
     </div>
 
-    <a href="{{ route('works.index') }}" class="btn btn-m btn-secondary">
+    <a href="{{ route('works.index', ['table' => $work->status == 1 ? 'archived' : 'active']) }}" class="btn btn-m btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Նախորդ էջ
     </a>
 </div>
@@ -94,14 +94,13 @@
 
             <div>
                 <label>Չվերանորոգվող:</label>
+                <input type="hidden" name="non_repairable" value="0">
                 <input type="checkbox" name="non_repairable" value="1" {{ $work->non_repairable ? 'checked' : '' }} onchange="updateConclusionNumber()">
 
-                <div>
-{{--                    @if($work->non_repairable && $work->conclusion_number)--}}
-                        <a href="{{ route('works.print-preview', $work) }}" target="_blank" class="btn btn-sm btn-info">
-                            <i class="fa-solid fa-print"></i> Տպել նախնական
-                        </a>
-{{--                    @endif--}}
+                <div id="print-preview-btn" style="{{ $work->non_repairable ? '' : 'display: none;' }}">
+                    <a href="{{ route('works.print-preview', $work) }}" target="_blank" class="btn btn-sm btn-info">
+                        <i class="fa-solid fa-print"></i> Տպել նախնական
+                    </a>
                 </div>
             </div>
 
@@ -142,7 +141,7 @@
 
         <div style="margin-top: 30px;">
             <button type="submit" class="btn btn-primary">Պահպանել</button>
-            <a href="{{ route('works.index') }}" class="btn btn-danger">Չեղարկել</a>
+            <a href="{{ route('works.index', ['table' => $work->status == 1 ? 'archived' : 'active']) }}" class="btn btn-danger">Չեղարկել</a>
         </div>
     </form>
 </div>
@@ -157,7 +156,7 @@
         const structureSelect = document.getElementById('structure-select');
         const partnerId = partnerSelect.value;
 
-        structureSelect.innerHTML = '<option value="">Select Structure</option>';
+        structureSelect.innerHTML = '<option value="">Ընտրել ՏՏ</option>';
 
         if (partnerId) {
             const partner = partnersData.find(p => p.id == partnerId);
@@ -180,7 +179,7 @@
         const groupSelect = document.getElementById('group-select');
         const equipmentId = equipmentSelect.value;
 
-        groupSelect.innerHTML = '<option value="">Select Group</option>';
+        groupSelect.innerHTML = '<option value="">Ընտրել կարգ</option>';
 
         if (equipmentId) {
             const equipment = equipmentData.find(e => e.id == equipmentId);
@@ -204,34 +203,30 @@
         const priceInput = document.getElementById('group-price');
         const selectedOption = groupSelect.options[groupSelect.selectedIndex];
 
-        if (selectedOption && selectedOption.dataset.totalPrice) {
+        if (selectedOption && selectedOption.value === '') {
+            priceInput.value = 0;
+        } else if (selectedOption && selectedOption.dataset.totalPrice) {
             priceInput.value = selectedOption.dataset.totalPrice;
         }
     }
 
     function updateConclusionNumber() {
-        const checkbox = document.querySelector('input[name="non_repairable"]');
+        const checkbox = document.querySelector('input[name="non_repairable"][type="checkbox"]');
+        const printBtn = document.getElementById('print-preview-btn');
         const conclusionInput = document.getElementById('conclusion-number');
 
         if (checkbox.checked) {
+            printBtn.style.display = '';
             if (!conclusionInput.value) {
-                conclusionInput.value = {{ $nextConclusionNumber }};
+                conclusionInput.value = {{ $work->conclusion_number ?? $nextConclusionNumber ?? 1 }};
             }
         } else {
+            printBtn.style.display = 'none';
             conclusionInput.value = '';
         }
     }
 
-    function toggleWorkOrderStatus() {
-        const statusSelect = document.getElementById('status-select');
-        const workOrderDiv = document.getElementById('work-order-status-div');
 
-        if (statusSelect.value === '1') {
-            workOrderDiv.style.display = 'block';
-        } else {
-            workOrderDiv.style.display = 'none';
-        }
-    }
 
     function updateNewSerial() {
         const oldSerial = document.getElementById('old-serial').value;
@@ -254,13 +249,22 @@
         }
     }
 
-    // Track if user manually modified new serial
-    document.getElementById('new-serial').addEventListener('input', function() {
-        this.dataset.userModified = 'true';
-    });
+    function toggleWorkOrderStatus() {
+        const statusSelect = document.getElementById('status-select');
+        const workOrderDiv = document.getElementById('work-order-status-div');
 
-    // Initialize dropdowns on page load
+        if (statusSelect.value === '1') {
+            workOrderDiv.style.display = 'block';
+        } else {
+            workOrderDiv.style.display = 'none';
+        }
+    }
+
+    // Track if user manually modified new serial
     document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('new-serial').addEventListener('input', function() {
+            this.dataset.userModified = 'true';
+        });
         updatePartnerStructures();
         updateEquipmentGroups();
     });

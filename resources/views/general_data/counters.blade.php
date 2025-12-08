@@ -83,7 +83,6 @@
         <tr>
             <th>Part Selection</th>
             <th>Name</th>
-            <th>Type</th>
             <th>Quantity</th>
             <th>Unit Price</th>
             <th>Measure Unit</th>

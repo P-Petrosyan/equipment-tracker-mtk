@@ -17,7 +17,7 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 800px;">
             <div>
                 <label>Մուտքի ամսաթիվ:</label>
-                <input type="date" name="receive_date" class="form-control" required>
+                <input type="date" name="receive_date" class="form-control" value="{{ date('Y-m-d') }}" required>
             </div>
 
             <div>
@@ -137,7 +137,7 @@
         const structureSelect = document.getElementById('structure-select');
         const partnerId = partnerSelect.value;
 
-        structureSelect.innerHTML = '<option value="">Select Structure</option>';
+        structureSelect.innerHTML = '<option value="">Ընտրել ՏՏ</option>';
 
         if (partnerId) {
             const partner = partnersData.find(p => p.id == partnerId);
@@ -151,13 +151,13 @@
             }
         }
     }
-
+    updateEquipmentGroups()
     function updateEquipmentGroups() {
         const equipmentSelect = document.getElementById('equipment-select');
         const groupSelect = document.getElementById('group-select');
         const equipmentId = equipmentSelect.value;
 
-        groupSelect.innerHTML = '<option value="">Select Group</option>';
+        groupSelect.innerHTML = '<option value="">Ընտրել կարգ</option>';
 
         if (equipmentId) {
             const equipment = equipmentData.find(e => e.id == equipmentId);

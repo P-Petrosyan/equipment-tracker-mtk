@@ -10,26 +10,35 @@ class WorkController extends Controller
 {
     public function index(Request $request)
     {
+        $currentTable = $request->get('table', 'active');
+        
         $activeQuery = Work::with(['partner', 'partnerStructure', 'equipment', 'equipmentPartGroup'])
             ->where('status', 0);
 
         $archivedQuery = Work::with(['partner', 'partnerStructure', 'equipment', 'equipmentPartGroup'])
             ->where('status', 1);
 
-        if ($request->filled('old_serial')) {
-            $activeQuery->where('old_serial_number', 'like', '%' . $request->old_serial . '%');
-            $archivedQuery->where('old_serial_number', 'like', '%' . $request->old_serial . '%');
-        }
-
-        if ($request->filled('new_serial')) {
-            $activeQuery->where('new_serial_number', 'like', '%' . $request->new_serial . '%');
-            $archivedQuery->where('new_serial_number', 'like', '%' . $request->new_serial . '%');
+        // Apply search filters only to the current table
+        if ($currentTable === 'active') {
+            if ($request->filled('old_serial')) {
+                $activeQuery->where('old_serial_number', 'like', '%' . $request->old_serial . '%');
+            }
+            if ($request->filled('new_serial')) {
+                $activeQuery->where('new_serial_number', 'like', '%' . $request->new_serial . '%');
+            }
+        } else {
+            if ($request->filled('old_serial')) {
+                $archivedQuery->where('old_serial_number', 'like', '%' . $request->old_serial . '%');
+            }
+            if ($request->filled('new_serial')) {
+                $archivedQuery->where('new_serial_number', 'like', '%' . $request->new_serial . '%');
+            }
         }
 
         $activeWorks = $activeQuery->paginate(15, ['*'], 'active');
         $archivedWorks = $archivedQuery->paginate(15, ['*'], 'archived');
 
-        return view('works.index', compact('activeWorks', 'archivedWorks'));
+        return view('works.index', compact('activeWorks', 'archivedWorks', 'currentTable'));
     }
 
     public function create()
@@ -95,8 +104,9 @@ class WorkController extends Controller
         ]);
 
         $work->update($validated);
-
-        return redirect()->route('works.index')->with('success', 'Work updated successfully.');
+        
+        $table = $work->status == 1 ? 'archived' : 'active';
+        return redirect()->route('works.index', ['table' => $table])->with('success', 'Work updated successfully.');
     }
 
     public function destroy(Work $work)
@@ -125,7 +135,7 @@ class WorkController extends Controller
     {
         $lastWork = Work::whereNotNull('conclusion_number')
             ->where('non_repairable', true)
-            ->orderBy('conclusion_number', 'desc')
+            ->orderByRaw('CAST(conclusion_number AS UNSIGNED) DESC')
             ->first();
 
         return $lastWork ? (int)$lastWork->conclusion_number + 1 : 1;
