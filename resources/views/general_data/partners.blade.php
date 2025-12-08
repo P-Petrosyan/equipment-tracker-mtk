@@ -3,12 +3,12 @@
     <table class="ms-table" id="partners-table">
         <thead>
         <tr>
-            <th>Region</th>
-            <th>Address</th>
-            <th>Tnoren</th>
-            <th>Hashvapah</th>
-            <th>Notes</th>
-            <th>Actions</th>
+            <th>Տարածաշրջան</th>
+            <th>Հասցե</th>
+            <th>Տնօրեն</th>
+            <th>Հաշվապահ</th>
+            <th>Նշումներ</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -66,7 +66,7 @@
     <table class="ms-table">
         <thead>
         <tr>
-            <th>SS</th>
+            <th>ՏՏ</th>
             <th>Actions</th>
         </tr>
         </thead>

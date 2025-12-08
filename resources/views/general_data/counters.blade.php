@@ -4,7 +4,7 @@
 <div style="display: flex; flex-direction: row; gap: 10px;">
 
     <div class="data-table-wrapper" style="margin-bottom: 20px;">
-        <h5>Equipment</h5>
+        <h5>Սարքեր (Equipments)</h5>
         <table class="ms-table" id="equipment-table">
             <thead>
             <tr>
@@ -56,7 +56,7 @@
     </div>
     <!-- Part Groups Table -->
     <div class="data-table-wrapper" style="margin-bottom: 20px;">
-        <h5>Part Groups</h5>
+        <h5>Կարգեր (Part Groups)</h5>
         <table class="ms-table" id="groups-table">
             <thead>
             <tr>
@@ -68,7 +68,7 @@
             </thead>
             <tbody id="groups-body">
             <tr>
-                <td colspan="4" class="text-center text-muted">Select equipment to view groups</td>
+                <td colspan="4" class="text-center text-muted">Ընտրեք սարքը՝ խմբերը դիտելու համար</td>
             </tr>
             </tbody>
         </table>
@@ -77,7 +77,7 @@
 
 <!-- Parts Table -->
 <div class="data-table-wrapper">
-    <h5>Parts</h5>
+    <h5>Դետալներ (Parts)</h5>
     <table class="ms-table">
         <thead>
         <tr>
@@ -92,7 +92,7 @@
         </thead>
         <tbody id="parts-body">
         <tr>
-            <td colspan="7" class="text-center text-muted">Select group to view parts</td>
+            <td colspan="7" class="text-center text-muted">Ընտրեք խումբ՝ դետալները դիտելու համար</td>
         </tr>
         </tbody>
     </table>
@@ -159,7 +159,7 @@
         groupsBody.appendChild(addGroupRow);
 
         // Clear parts table
-        document.getElementById('parts-body').innerHTML = '<tr><td colspan="7" class="text-center text-muted">Select group to view parts</td></tr>';
+        document.getElementById('parts-body').innerHTML = '<tr><td colspan="7" class="text-center text-muted">Ընտրեք խումբ՝ դետալները դիտելու համար</td></tr>';
     }
 
     function selectGroup(groupId, row, equipmentData) {
@@ -179,12 +179,11 @@
                 tr.innerHTML = `
                     <td>${part.code || '-'}</td>
                     <td>${part.name}</td>
-                    <td>${part.type || '-'}</td>
                     <td>${part.pivot.quantity || part.quantity}</td>
                     <td>${part.unit_price ? parseFloat(part.unit_price).toFixed(2) : ''}</td>
                     <td>${part.measure_unit}</td>
                     <td>
-                        <button onclick="removePart(${part.id}, event)" class="text-red-600 hover:underline">Remove</button>
+                        <button onclick="removePart(${part.id}, event)" class="text-red-600 hover:underline">Delete</button>
                     </td>
                 `;
                 partsBody.appendChild(tr);
@@ -192,7 +191,7 @@
         }
 
         // Add inline form for new part
-        let partOptions = '<option value="">Select Part</option>';
+        let partOptions = '<option value="">Ընտրել դետալ</option>';
         allParts.forEach(part => {
             partOptions += `<option value="${part.id}">${part.code || 'No Code'} ${part.name} </option>`;
         });
@@ -200,7 +199,6 @@
         const addPartRow = document.createElement('tr');
         addPartRow.innerHTML = `
             <td><select id="new-part-select" class="border p-1 w-full" required>${partOptions}</select></td>
-            <td>-</td>
             <td>-</td>
             <td><input type="number" id="new-part-quantity" placeholder="Quantity" class="border p-1 w-full" min="1" required></td>
             <td>-</td>

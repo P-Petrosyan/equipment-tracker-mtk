@@ -15,12 +15,12 @@
     <table class="ms-table">
         <thead>
             <tr>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Measure Unit</th>
-                <th>Actions</th>
+                <th>Կոդ</th>
+                <th>Անվանում</th>
+                <th>Գին</th>
+                <th>Քանակ</th>
+                <th>Չ/Մ</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>

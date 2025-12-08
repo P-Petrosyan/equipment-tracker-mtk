@@ -26,9 +26,9 @@
 </style>
 
 <div class="header">
-    <h1 class="page-title" style="font-size: 1.2rem;">Work History for Serial: {{ $serial }}</h1>
+    <h1 class="page-title" style="font-size: 1.2rem;">Պատմություն հին համարով: {{ $serial }}</h1>
     <a href="{{ url()->previous() }}" class="btn btn-m btn-secondary">
-        <i class="fa-solid fa-arrow-left"></i> Back
+        <i class="fa-solid fa-arrow-left"></i> Նախորդ էջ
     </a>
 </div>
 
@@ -36,15 +36,16 @@
     <table class="ms-table">
         <thead>
             <tr>
-                <th>Receive Date</th>
-                <th>Exit Date</th>
-                <th>Old Serial</th>
-                <th>New Serial</th>
-                <th>Partner</th>
-                <th>Structure</th>
-                <th>Equipment</th>
-                <th>Group</th>
-                <th>Status</th>
+                <th>Մուտքի ամսաթիվ</th>
+                <th>Ելքի ամսաթիվ</th>
+                <th>Հին համար</th>
+                <th>Նոր համար</th>
+                <th>ԳԳՄ</th>
+                <th>ՏՏ</th>
+                <th>Սարք</th>
+                <th>Կարգ</th>
+                <th>Կարգի գումար</th>
+                <th>Կարգավիխակ</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -59,6 +60,7 @@
                     <td>{{ $work->partnerStructure->name ?? '-' }}</td>
                     <td>{{ $work->equipment->name ?? '-' }}</td>
                     <td>{{ $work->equipmentPartGroup->name ?? '-' }}</td>
+                    <td>{{ $work->equipment_part_group_total_price?? '-' }}</td>
                     <td>{{ $work->status ? 'արխիվ' : 'ընթացիկ' }}</td>
                     <td>
                         <a href="{{ route('works.edit', $work) }}" class="btn btn-sm btn-primary">Edit</a>

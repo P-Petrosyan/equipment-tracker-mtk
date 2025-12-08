@@ -36,13 +36,13 @@
     <table class="ms-table">
         <thead>
             <tr>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Current Quantity</th>
-                <th>Add Quantity</th>
-                <th>Measure Unit</th>
-                <th>Actions</th>
+                <th>Կոդ</th>
+                <th>Անվանում</th>
+                <th>Գին</th>
+                <th>Առկա քանակություն</th>
+                <th>Ավելացնել</th>
+                <th>Չ/Մ</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -58,7 +58,7 @@
                         </td>
                         <td>{{ $part->measure_unit }}</td>
                         <td>
-                            <button onclick="addQuantity({{ $part->id }})" class="text-green-600 font-bold">Add</button>
+                            <button onclick="addQuantity({{ $part->id }})" class="btn btn-success font-bold">Add</button>
                         </td>
                     </tr>
                 @endforeach

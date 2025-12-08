@@ -43,14 +43,14 @@
     <h3>Ընթացիկ աշխատանքներ (Active Works)</h3>
     <div style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
         <a href="{{ route('works.create') }}" class="btn btn-m btn-success">
-            <i class="fa-solid fa-plus"></i> Create New Work
+            <i class="fa-solid fa-plus"></i> Ստեղծել նորը
         </a>
         <form method="GET" style="display: flex; gap: 5px;">
             <input type="hidden" name="table" value="active">
             <input type="text" name="old_serial" placeholder="Հին համար" value="{{ request('old_serial') }}" style="padding: 5px;">
             <input type="text" name="new_serial" placeholder="Նոր համար" value="{{ request('new_serial') }}" style="padding: 5px;">
-            <button type="submit" class="btn btn-m btn-info">Search</button>
-            <a href="{{ route('works.index') }}" class="btn btn-m btn-secondary">Clear</a>
+            <button type="submit" class="btn btn-m btn-info">Որոնել</button>
+            <a href="{{ route('works.index') }}" class="btn btn-m btn-secondary">Մաքրել</a>
         </form>
     </div>
     <table class="ms-table">
@@ -115,8 +115,8 @@
             <input type="hidden" name="table" value="archived">
             <input type="text" name="old_serial" placeholder="հին համար" value="{{ request('old_serial') }}" style="padding: 5px;">
             <input type="text" name="new_serial" placeholder="Նոր համար" value="{{ request('new_serial') }}" style="padding: 5px;">
-            <button type="submit" class="btn btn-m btn-info">Search</button>
-            <a href="{{ route('works.index') }}" class="btn btn-m btn-secondary">Clear</a>
+            <button type="submit" class="btn btn-m btn-info">Որոնել</button>
+            <a href="{{ route('works.index') }}" class="btn btn-m btn-secondary">Մաքրել</a>
         </form>
     </div>
     <table class="ms-table">

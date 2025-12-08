@@ -6,16 +6,16 @@
 <div class="header mb-2">
     <div style="display: flex; gap: 10px;">
 
-    <h1 class="page-title" style="font-size: 1.2rem;">Edit Work</h1>
+    <h1 class="page-title" style="font-size: 1.2rem;">Խմբագրել</h1>
     @if($work->old_serial_number)
-        <a href="{{ route('works.history', $work->old_serial_number) }}" class="btn btn-sm btn-info">
-            <i class="fa-solid fa-history"></i> History
+        <a href="{{ route('works.history', $work->old_serial_number) }}" class="btn btn-m btn-info">
+            <i class="fa-solid fa-history"></i> Պատմություն
         </a>
     @endif
     </div>
 
-    <a href="{{ route('works.index') }}" class="btn btn-sm btn-secondary">
-        <i class="fa-solid fa-arrow-left"></i> Back to Works
+    <a href="{{ route('works.index') }}" class="btn btn-m btn-secondary">
+        <i class="fa-solid fa-arrow-left"></i> Նախորդ էջ
     </a>
 </div>
 
@@ -70,14 +70,14 @@
             <div>
                 <label>Կարգ:</label>
                 <select name="equipment_part_group_id" id="group-select" class="form-control" onchange="updateGroupPrice()">
-                    <option value="">Select Group</option>
+                    <option value="">Ընտրել կարգ</option>
                 </select>
             </div>
 
             <div>
                 <label>ՏՏ:</label>
                 <select name="partner_structure_id" id="structure-select" class="form-control">
-                    <option value="">Select Structure</option>
+                    <option value="">Ընտրել ՏՏ</option>
                 </select>
             </div>
 
@@ -99,21 +99,21 @@
                 <div>
 {{--                    @if($work->non_repairable && $work->conclusion_number)--}}
                         <a href="{{ route('works.print-preview', $work) }}" target="_blank" class="btn btn-sm btn-info">
-                            <i class="fa-solid fa-print"></i> Print Preview
+                            <i class="fa-solid fa-print"></i> Տպել նախնական
                         </a>
 {{--                    @endif--}}
                 </div>
             </div>
 
             <div>
-                <label>Եզրակ համար:</label>
+                <label>Եզրակացության համար:</label>
                 <input type="text" name="conclusion_number" id="conclusion-number" value="{{ $work->conclusion_number }}" class="form-control">
             </div>
 
             <div>
                 <label>Թերություն:</label>
                 <select id="defect-select" class="form-control" onchange="updateDefectDescription()">
-                    <option value="">Select Defect</option>
+                    <option value="">Ընտրել թերություն</option>
                     @foreach($defects as $defect)
                         <option value="{{ $defect->id }}" data-description="{{ $defect->description }}">{{ $defect->group_id }} {{ $defect->description }}</option>
                     @endforeach
@@ -126,7 +126,7 @@
             </div>
 
             <div>
-                <label>Status:</label>
+                <label>Կարգավիճակ:</label>
                 <select name="status" id="status-select" class="form-control" onchange="toggleWorkOrderStatus()">
                     <option value="0" {{ $work->status == 0 ? 'selected' : '' }}>Ընթացիկ</option>
                     <option value="1" {{ $work->status == 1 ? 'selected' : '' }}>Արխիվ</option>
@@ -141,8 +141,8 @@
         </div>
 
         <div style="margin-top: 30px;">
-            <button type="submit" class="btn btn-primary">Update Work</button>
-            <a href="{{ route('works.index') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Պահպանել</button>
+            <a href="{{ route('works.index') }}" class="btn btn-danger">Չեղարկել</a>
         </div>
     </form>
 </div>

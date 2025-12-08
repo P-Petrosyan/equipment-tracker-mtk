@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="header mb-2">
-    <h1 class="page-title" style="font-size: 1.2rem;">Create New Work</h1>
-    <a href="{{ route('works.index') }}" class="btn btn-sm btn-secondary">
-        <i class="fa-solid fa-arrow-left"></i> Back to Works
+    <h1 class="page-title" style="font-size: 1.2rem;">Ստեղծել նորը</h1>
+    <a href="{{ route('works.index') }}" class="btn btn-m btn-secondary">
+        <i class="fa-solid fa-arrow-left"></i> Նախորդ էջ
     </a>
 </div>
 
@@ -16,27 +16,27 @@
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 800px;">
             <div>
-                <label>Receive Date:</label>
+                <label>Մուտքի ամսաթիվ:</label>
                 <input type="date" name="receive_date" class="form-control" required>
             </div>
 
             <div>
-                <label>Exit Date:</label>
+                <label>Ելքի ամսաթիվ:</label>
                 <input type="date" name="exit_date" class="form-control">
             </div>
 
             <div>
-                <label>Old Serial Number:</label>
+                <label>Հին համար:</label>
                 <input type="text" name="old_serial_number" id="old-serial" class="form-control" oninput="updateNewSerial()">
             </div>
 
             <div>
-                <label>New Serial Number:</label>
+                <label>Նոր համար:</label>
                 <input type="text" name="new_serial_number" id="new-serial" class="form-control">
             </div>
 
             <div>
-                <label>Equipment:</label>
+                <label>Սարք:</label>
                 <select name="equipment_id" id="equipment-select" class="form-control" required onchange="updateEquipmentGroups()">
                     @foreach($equipment as $equip)
                         <option value="{{ $equip->id }}">{{ $equip->name }}</option>
@@ -45,9 +45,9 @@
             </div>
 
             <div>
-                <label>Partner:</label>
+                <label>ԳԳՄ:</label>
                 <select name="partner_id" id="partner-select" class="form-control" required onchange="updatePartnerStructures()">
-                    <option value="">Select Partner</option>
+                    <option value="">Ընտրել ԳԳՄ</option>
                     @foreach($partners as $partner)
                         <option value="{{ $partner->id }}">{{ $partner->region }}</option>
                     @endforeach
@@ -55,43 +55,43 @@
             </div>
 
             <div>
-                <label>Group:</label>
+                <label>Կարգ:</label>
                 <select name="equipment_part_group_id" id="group-select" class="form-control" onchange="updateGroupPrice()">
-                    <option value="">Select Group</option>
+                    <option value="">Ընտրել կարգ</option>
                 </select>
             </div>
 
             <div>
-                <label>Structure:</label>
+                <label>ՏՏ:</label>
                 <select name="partner_structure_id" id="structure-select" class="form-control">
-                    <option value="">Select Structure</option>
+                    <option value="">Ընտրել ՏՏ</option>
                 </select>
             </div>
 
             <div>
-                <label>Group Total Price:</label>
+                <label>Կարգի գին:</label>
                 <input type="number" step="0.01" name="equipment_part_group_total_price" id="group-price" class="form-control" readonly>
             </div>
 
             <div>
-                <label>Partner Representative:</label>
+                <label>ԳԳՄ ներկայացուցիչ:</label>
                 <input type="text" name="partner_representative" class="form-control">
             </div>
 
             <div>
-                <label>Non Repairable:</label>
+                <label>Չվերանորոգվող:</label>
                 <input type="checkbox" name="non_repairable" value="1" onchange="updateConclusionNumber()">
             </div>
 
             <div>
-                <label>Conclusion Number:</label>
+                <label>Եզրակացության համար:</label>
                 <input type="text" name="conclusion_number" id="conclusion-number" class="form-control">
             </div>
 
             <div>
-                <label>Defect:</label>
+                <label>Թերություն:</label>
                 <select id="defect-select" class="form-control" onchange="updateDefectDescription()">
-                    <option value="">Select Defect</option>
+                    <option value="">Ընտրել թերություն</option>
                     @foreach($defects as $defect)
                         <option value="{{ $defect->id }}" data-description="{{ $defect->description }}">{{ $defect->group_id }} {{ $defect->description }}</option>
                     @endforeach
@@ -99,12 +99,12 @@
             </div>
 
             <div>
-                <label>Defects Description:</label>
+                <label>Թերության նկարագիր:</label>
                 <textarea name="defects_description" id="defects-description" class="form-control" rows="3"></textarea>
             </div>
 
             <div>
-                <label>Status:</label>
+                <label>Կարգավիճակ:</label>
                 <select name="status" id="status-select" class="form-control" onchange="toggleWorkOrderStatus()">
                     <option value="0" selected>Ընթացիկ</option>
                     <option value="1">Արխիվ</option>
@@ -122,8 +122,8 @@
         </div>
 
         <div style="margin-top: 30px;">
-            <button type="submit" class="btn btn-primary">Create Work</button>
-            <a href="{{ route('works.index') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Ստղծել</button>
+            <a href="{{ route('works.index') }}" class="btn btn-danger">Չեղարկել</a>
         </div>
     </form>
 </div>
