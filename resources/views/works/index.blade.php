@@ -47,8 +47,8 @@
         </a>
         <form method="GET" style="display: flex; gap: 5px;">
             <input type="hidden" name="table" value="active">
-            <input type="text" name="old_serial" placeholder="Old Serial" value="{{ request('old_serial') }}" style="padding: 5px;">
-            <input type="text" name="new_serial" placeholder="New Serial" value="{{ request('new_serial') }}" style="padding: 5px;">
+            <input type="text" name="old_serial" placeholder="Հին համար" value="{{ request('old_serial') }}" style="padding: 5px;">
+            <input type="text" name="new_serial" placeholder="Նոր համար" value="{{ request('new_serial') }}" style="padding: 5px;">
             <button type="submit" class="btn btn-m btn-info">Search</button>
             <a href="{{ route('works.index') }}" class="btn btn-m btn-secondary">Clear</a>
         </form>
@@ -56,13 +56,13 @@
     <table class="ms-table">
         <thead>
             <tr>
-                <th>Receive Date</th>
+                <th>Մուտքի ամսաթիվ</th>
 {{--                <th>Exit Date</th>--}}
-                <th>Old Serial</th>
-                <th>New Serial</th>
-                <th>Partner</th>
-                <th>Structure</th>
-                <th>Equipment</th>
+                <th>Հին համար</th>
+                <th>Նոր համար</th>
+                <th>ԳԳՄ</th>
+                <th>ՏՏ</th>
+                <th>Սարք</th>
 {{--                <th>Group</th>--}}
 {{--                <th>Group Total Price</th>--}}
 {{--                <th>Representative</th>--}}
@@ -113,8 +113,8 @@
     <div style="margin-bottom: 10px;">
         <form method="GET" style="display: flex; gap: 5px;">
             <input type="hidden" name="table" value="archived">
-            <input type="text" name="old_serial" placeholder="Old Serial" value="{{ request('old_serial') }}" style="padding: 5px;">
-            <input type="text" name="new_serial" placeholder="New Serial" value="{{ request('new_serial') }}" style="padding: 5px;">
+            <input type="text" name="old_serial" placeholder="հին համար" value="{{ request('old_serial') }}" style="padding: 5px;">
+            <input type="text" name="new_serial" placeholder="Նոր համար" value="{{ request('new_serial') }}" style="padding: 5px;">
             <button type="submit" class="btn btn-m btn-info">Search</button>
             <a href="{{ route('works.index') }}" class="btn btn-m btn-secondary">Clear</a>
         </form>
@@ -122,16 +122,16 @@
     <table class="ms-table">
         <thead>
             <tr>
-                <th>Receive Date</th>
-                <th>Exit Date</th>
-                <th>Old Serial</th>
-                <th>New Serial</th>
-                <th>Partner</th>
-                <th>Structure</th>
-                <th>Equipment</th>
-                <th>Group</th>
-                <th>Group Total Price</th>
-                <th>Non Repairable</th>
+                <th>Մուտքի ամսաթիվ</th>
+                <th>Ելքի ամսաթիվ</th>
+                <th>Հին համար</th>
+                <th>Նոր համար</th>
+                <th>ԳԳՄ</th>
+                <th>ՏՏ</th>
+                <th>Սարք</th>
+                <th>Կարգ</th>
+                <th>Կարգի Գումար</th>
+                <th>Չվերանորոգվող</th>
                 <th>Կատարողական</th>
             </tr>
         </thead>
@@ -148,8 +148,8 @@
                         <td>{{ $work->equipment->name ?? '-' }}</td>
                         <td>{{ $work->equipmentPartGroup->name ?? '-' }}</td>
                         <td>{{ $work->equipment_part_group_total_price ?? '-' }}</td>
-                        <td>{{ $work->non_repairable ? 'Yes' : 'No' }}</td>
-                        <td>{{ $work->work_order_status ? 'կատարողականով' : 'չկա կատարողական' }}</td>
+                        <td>{{ $work->non_repairable ? 'Այո' : 'Ոչ' }}</td>
+                        <td>{{ $work->work_order_status ? 'կատ.' : 'չկա կատ.' }}</td>
 {{--                        <td>--}}
 {{--                            <a href="{{ route('works.edit', $work) }}" class="text-blue-600 hover:underline">Edit</a>--}}
 {{--                            <form action="{{ route('works.destroy', $work) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display:inline;">--}}

@@ -3,7 +3,7 @@
     <table class="ms-table">
         <thead>
             <tr>
-                <th>Receive Date</th>
+                <th>Ստացման ամսաթիվ</th>
                 <th>Exit Date</th>
                 <th>Partner</th>
                 <th>Structure</th>
@@ -130,7 +130,7 @@
             originalWorkValues[id][field] = cell.textContent;
 
             const input = document.createElement('input');
-            input.type = ['receive_date', 'exit_date'].includes(field) ? 'date' : 
+            input.type = ['receive_date', 'exit_date'].includes(field) ? 'date' :
                         field === 'equipment_part_group_total_price' ? 'number' : 'text';
             if (field === 'equipment_part_group_total_price') input.step = '0.01';
             input.value = value;

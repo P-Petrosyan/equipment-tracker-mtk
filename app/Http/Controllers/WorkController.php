@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Partner;
 use App\Models\Work;
 use Illuminate\Http\Request;
 
@@ -11,7 +12,7 @@ class WorkController extends Controller
     {
         $activeQuery = Work::with(['partner', 'partnerStructure', 'equipment', 'equipmentPartGroup'])
             ->where('status', 0);
-        
+
         $archivedQuery = Work::with(['partner', 'partnerStructure', 'equipment', 'equipmentPartGroup'])
             ->where('status', 1);
 
@@ -27,13 +28,13 @@ class WorkController extends Controller
 
         $activeWorks = $activeQuery->paginate(15, ['*'], 'active');
         $archivedWorks = $archivedQuery->paginate(15, ['*'], 'archived');
-        
+
         return view('works.index', compact('activeWorks', 'archivedWorks'));
     }
 
     public function create()
     {
-        $partners = \App\Models\Partner::with('structures')->get();
+        $partners = Partner::with('structures')->get();
         $equipment = \App\Models\Equipment::with('partGroups')->get();
         $defects = \App\Models\Defect::all();
         $nextConclusionNumber = $this->getNextConclusionNumber();
@@ -42,7 +43,7 @@ class WorkController extends Controller
 
     public function edit(Work $work)
     {
-        $partners = \App\Models\Partner::with('structures')->get();
+        $partners = Partner::with('structures')->get();
         $equipment = \App\Models\Equipment::with('partGroups')->get();
         $defects = \App\Models\Defect::all();
         $nextConclusionNumber = $this->getNextConclusionNumber();
@@ -91,7 +92,6 @@ class WorkController extends Controller
             'defects_description' => 'nullable|string',
             'work_order_status' => 'nullable|in:0,1',
             'status' => 'sometimes|required|in:0,1',
-            'work_order_status' => 'sometimes|required|in:0,1',
         ]);
 
         $work->update($validated);
@@ -111,7 +111,7 @@ class WorkController extends Controller
             ->where('old_serial_number', $serial)
             ->orderBy('receive_date', 'desc')
             ->get();
-        
+
         return view('works.history', compact('works', 'serial'));
     }
 

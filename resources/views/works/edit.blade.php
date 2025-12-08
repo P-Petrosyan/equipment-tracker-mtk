@@ -26,27 +26,27 @@
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 800px;">
             <div>
-                <label>Receive Date:</label>
+                <label>Մուտքի ամսաթիվ:</label>
                 <input type="date" name="receive_date" value="{{ $work->receive_date ? $work->receive_date->format('Y-m-d') : '' }}" class="form-control" required>
             </div>
 
             <div>
-                <label>Exit Date:</label>
+                <label>Ելքի ամսաթիվ:</label>
                 <input type="date" name="exit_date" value="{{ $work->exit_date ? $work->exit_date->format('Y-m-d') : '' }}" class="form-control">
             </div>
 
             <div>
-                <label>Old Serial Number:</label>
+                <label>Հին համար:</label>
                 <input type="text" name="old_serial_number" id="old-serial" value="{{ $work->old_serial_number }}" class="form-control" oninput="updateNewSerial()">
             </div>
 
             <div>
-                <label>New Serial Number:</label>
+                <label>Նոր համար:</label>
                 <input type="text" name="new_serial_number" id="new-serial" value="{{ $work->new_serial_number }}" class="form-control">
             </div>
 
             <div>
-                <label>Equipment:</label>
+                <label>Սարք:</label>
                 <select name="equipment_id" id="equipment-select" class="form-control" required onchange="updateEquipmentGroups()">
                     @foreach($equipment as $equip)
                         <option value="{{ $equip->id }}" {{ $work->equipment_id == $equip->id ? 'selected' : '' }}>
@@ -57,7 +57,7 @@
             </div>
 
             <div>
-                <label>Partner:</label>
+                <label>ԳԳՄ:</label>
                 <select name="partner_id" id="partner-select" class="form-control" required onchange="updatePartnerStructures()">
                     @foreach($partners as $partner)
                         <option value="{{ $partner->id }}" {{ $work->partner_id == $partner->id ? 'selected' : '' }}>
@@ -68,32 +68,32 @@
             </div>
 
             <div>
-                <label>Group:</label>
+                <label>Կարգ:</label>
                 <select name="equipment_part_group_id" id="group-select" class="form-control" onchange="updateGroupPrice()">
                     <option value="">Select Group</option>
                 </select>
             </div>
 
             <div>
-                <label>Structure:</label>
+                <label>ՏՏ:</label>
                 <select name="partner_structure_id" id="structure-select" class="form-control">
                     <option value="">Select Structure</option>
                 </select>
             </div>
 
             <div>
-                <label>Group Total Price:</label>
+                <label>Կարգի գումար:</label>
                 <input type="number" step="0.01" name="equipment_part_group_total_price" id="group-price"
                        value="{{ $work->equipment_part_group_total_price }}" class="form-control" readonly>
             </div>
 
             <div>
-                <label>Partner Representative:</label>
+                <label>ԳԳՄ ներկայացուցիչ:</label>
                 <input type="text" name="partner_representative" value="{{ $work->partner_representative }}" class="form-control">
             </div>
 
             <div>
-                <label>Non Repairable:</label>
+                <label>Չվերանորոգվող:</label>
                 <input type="checkbox" name="non_repairable" value="1" {{ $work->non_repairable ? 'checked' : '' }} onchange="updateConclusionNumber()">
 
                 <div>
@@ -106,12 +106,12 @@
             </div>
 
             <div>
-                <label>Conclusion Number:</label>
+                <label>Եզրակ համար:</label>
                 <input type="text" name="conclusion_number" id="conclusion-number" value="{{ $work->conclusion_number }}" class="form-control">
             </div>
 
             <div>
-                <label>Defect:</label>
+                <label>Թերություն:</label>
                 <select id="defect-select" class="form-control" onchange="updateDefectDescription()">
                     <option value="">Select Defect</option>
                     @foreach($defects as $defect)
@@ -121,7 +121,7 @@
             </div>
 
             <div>
-                <label>Defects Description:</label>
+                <label>Թերության նկարագիր:</label>
                 <textarea name="defects_description" id="defects-description" class="form-control" rows="3">{{ $work->defects_description }}</textarea>
             </div>
 
@@ -134,11 +134,8 @@
             </div>
 
             <div id="work-order-status-div" style="display: {{ $work->status == 1 ? 'block' : 'none' }};">
-                <label>Work Order Status:</label>
-                <select name="work_order_status" class="form-control">
-                    <option value="0" {{ $work->work_order_status == 0 ? 'selected' : '' }}>Չկա կատարողական</option>
-                    <option value="1" {{ $work->work_order_status == 1 ? 'selected' : '' }}>Կատարողականով</option>
-                </select>
+                <label>Կատարողական:</label>
+                <input type="text" value="{{ $work->work_order_status ? 'Կատարողականով' : 'Չկա կատարողական'  }}" class="form-control" disabled>
             </div>
 
         </div>
