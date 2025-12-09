@@ -73,7 +73,7 @@
                 <a href="{{ route('reports.index') }}" class="dashboard-btn">
                     Հաշվետվություններ
                 </a>
-                <a href="" class="dashboard-btn">
+                <a href="{{ route('acts.index') }}" class="dashboard-btn">
                     Կատարողական<br>ակտեր
                 </a>
                 <a href="{{ route('parts.index') }}" class="dashboard-btn">

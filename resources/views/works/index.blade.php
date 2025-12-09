@@ -74,6 +74,7 @@
                         <button type="submit" class="btn btn-m btn-info">Որոնել</button>
                         <a href="{{ route('works.index', ['table' => 'active']) }}" class="btn btn-m btn-secondary">Մաքրել</a>
                     </td>
+                    <td></td>
                 </form>
             </tr>
             <tr>
@@ -164,6 +165,9 @@
                         <button type="submit" class="btn btn-m btn-info">Որոնել</button>
                         <a href="{{ route('works.index', ['table' => 'archived']) }}" class="btn btn-m btn-secondary">Մաքրել</a>
                     </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </form>
             </tr>
             <tr>

@@ -12,6 +12,7 @@ use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\PartController;
 use App\Http\Controllers\WorkController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ActController;
 use App\Models\Defect;
 use App\Models\Equipment;
 use App\Models\Naming;
@@ -114,3 +115,10 @@ Route::post('/works/preview-draft', [WorkController::class, 'previewDraft'])->na
 
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 Route::post('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');
+
+Route::get('/acts', [ActController::class, 'index'])->name('acts.index');
+Route::post('/acts', [ActController::class, 'store'])->name('acts.store');
+Route::delete('/acts/{act}', [ActController::class, 'destroy'])->name('acts.destroy');
+Route::get('/acts/archived-works', [ActController::class, 'getArchivedWorks'])->name('acts.archived-works');
+Route::post('/acts/assign-work', [ActController::class, 'assignWork'])->name('acts.assign-work');
+Route::post('/acts/remove-work', [ActController::class, 'removeWork'])->name('acts.remove-work');
