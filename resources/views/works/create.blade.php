@@ -172,7 +172,7 @@
                 equipment.part_groups.forEach(group => {
                     const option = document.createElement('option');
                     option.value = group.id;
-                    option.textContent = group.name;
+                    option.textContent = group.name + ' - ' + group.notes;
                     option.dataset.totalPrice = group.total_price || 0;
                     groupSelect.appendChild(option);
                 });
