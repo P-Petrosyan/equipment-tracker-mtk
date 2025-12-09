@@ -110,6 +110,7 @@ Route::patch('/works/{work}', [WorkController::class, 'update'])->name('works.up
 Route::delete('/works/{work}', [WorkController::class, 'destroy'])->name('works.destroy');
 Route::get('/works/history/{serial}', [WorkController::class, 'history'])->name('works.history');
 Route::get('/works/{work}/print-preview', [WorkController::class, 'printPreview'])->name('works.print-preview');
+Route::post('/works/preview-draft', [WorkController::class, 'previewDraft'])->name('works.preview-draft');
 
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 Route::post('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');

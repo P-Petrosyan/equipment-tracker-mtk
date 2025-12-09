@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Partner;
 use App\Models\Work;
+use App\Models\EquipmentPartGroup;
+use App\Models\Equipment;
+use App\Models\Defect;
+use App\Models\Position;
 use Illuminate\Http\Request;
 
 class WorkController extends Controller
@@ -11,7 +15,7 @@ class WorkController extends Controller
     public function index(Request $request)
     {
         $currentTable = $request->get('table', 'active');
-        
+
         $activeQuery = Work::with(['partner', 'partnerStructure', 'equipment', 'equipmentPartGroup'])
             ->where('status', 0);
 
@@ -44,8 +48,8 @@ class WorkController extends Controller
     public function create()
     {
         $partners = Partner::with('structures')->get();
-        $equipment = \App\Models\Equipment::with('partGroups')->get();
-        $defects = \App\Models\Defect::all();
+        $equipment = Equipment::with('partGroups')->get();
+        $defects = Defect::all();
         $nextConclusionNumber = $this->getNextConclusionNumber();
         return view('works.create', compact('partners', 'equipment', 'defects', 'nextConclusionNumber'));
     }
@@ -53,8 +57,8 @@ class WorkController extends Controller
     public function edit(Work $work)
     {
         $partners = Partner::with('structures')->get();
-        $equipment = \App\Models\Equipment::with('partGroups')->get();
-        $defects = \App\Models\Defect::all();
+        $equipment = Equipment::with('partGroups')->get();
+        $defects = Defect::all();
         $nextConclusionNumber = $this->getNextConclusionNumber();
         return view('works.edit', compact('work', 'partners', 'equipment', 'defects', 'nextConclusionNumber'));
     }
@@ -77,6 +81,13 @@ class WorkController extends Controller
             'work_order_status' => 'nullable|in:0,1',
             'status' => 'required|in:0,1'
         ]);
+
+        if ($validated['equipment_part_group_id']) {
+            $group = EquipmentPartGroup::find($validated['equipment_part_group_id']);
+            if ($group && is_numeric($group->notes) && $group->notes > 0) {
+                $group->decrement('notes');
+            }
+        }
 
         Work::create($validated);
 
@@ -103,8 +114,26 @@ class WorkController extends Controller
             'status' => 'sometimes|required|in:0,1',
         ]);
 
+        $oldGroupId = $work->equipment_part_group_id;
+        $newGroupId = $validated['equipment_part_group_id'];
+
+        if ($oldGroupId != $newGroupId) {
+            if ($oldGroupId) {
+                $oldGroup = EquipmentPartGroup::find($oldGroupId);
+                if ($oldGroup && is_numeric($oldGroup->notes)) {
+                    $oldGroup->increment('notes');
+                }
+            }
+            if ($newGroupId) {
+                $newGroup = EquipmentPartGroup::find($newGroupId);
+                if ($newGroup && is_numeric($newGroup->notes) && $newGroup->notes > 0) {
+                    $newGroup->decrement('notes');
+                }
+            }
+        }
+
         $work->update($validated);
-        
+
         $table = $work->status == 1 ? 'archived' : 'active';
         return redirect()->route('works.index', ['table' => $table])->with('success', 'Work updated successfully.');
     }
@@ -127,7 +156,21 @@ class WorkController extends Controller
 
     public function printPreview(Work $work)
     {
-        $position = \App\Models\Position::first();
+        $position = Position::first();
+        return view('works.print-preview', compact('work', 'position'));
+    }
+
+    public function previewDraft(Request $request)
+    {
+        $equipment = Equipment::find($request->equipment_id);
+
+        $work = (object) [
+            'conclusion_number' => $request->conclusion_number,
+            'old_serial_number' => $request->old_serial_number,
+            'equipment' => $equipment,
+        ];
+
+        $position = Position::first();
         return view('works.print-preview', compact('work', 'position'));
     }
 

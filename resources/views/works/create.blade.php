@@ -80,7 +80,14 @@
 
             <div>
                 <label>Չվերանորոգվող:</label>
+                <input type="hidden" name="non_repairable" value="0">
                 <input type="checkbox" name="non_repairable" value="1" onchange="updateConclusionNumber()">
+
+                <div id="print-preview-btn" style="display: none;">
+                    <button type="button" onclick="openPrintPreview()" class="btn btn-sm btn-info">
+                        <i class="fa-solid fa-print"></i> Տպել նախնական
+                    </button>
+                </div>
             </div>
 
             <div>
@@ -205,32 +212,63 @@
         const groupSelect = document.getElementById('group-select');
         const priceInput = document.getElementById('group-price');
         const selectedOption = groupSelect.options[groupSelect.selectedIndex];
-        console.log(selectedOption.dataset)
-        if (selectedOption && selectedOption.dataset.totalPrice) {
+
+        if (selectedOption && selectedOption.value === '') {
+            priceInput.value = '';
+        } else if (selectedOption && selectedOption.dataset.totalPrice) {
             priceInput.value = selectedOption.dataset.totalPrice;
         }
     }
 
     function updateConclusionNumber() {
-        const checkbox = document.querySelector('input[name="non_repairable"]');
+        const checkbox = document.querySelector('input[name="non_repairable"][type="checkbox"]');
+        const printBtn = document.getElementById('print-preview-btn');
         const conclusionInput = document.getElementById('conclusion-number');
 
         if (checkbox.checked) {
-            conclusionInput.value = {{ $nextConclusionNumber }};
+            printBtn.style.display = '';
+            if (!conclusionInput.value) {
+                conclusionInput.value = {{ $nextConclusionNumber ?? 1 }};
+            }
         } else {
+            printBtn.style.display = 'none';
             conclusionInput.value = '';
         }
     }
 
-    // function toggleWorkOrderStatus() {
-    //     const statusSelect = document.getElementById('status-select');
-    //     const workOrderDiv = document.getElementById('work-order-status-div');
-    //
-    //     if (statusSelect.value === '1') {
-    //         workOrderDiv.style.display = 'block';
-    //     } else {
-    //         workOrderDiv.style.display = 'none';
-    //     }
-    // }
+    function openPrintPreview() {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route("works.preview-draft") }}';
+        form.target = '_blank';
+
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = '{{ csrf_token() }}';
+        form.appendChild(csrfToken);
+
+        const conclusionInput = document.createElement('input');
+        conclusionInput.type = 'hidden';
+        conclusionInput.name = 'conclusion_number';
+        conclusionInput.value = document.querySelector('[name="conclusion_number"]').value;
+        form.appendChild(conclusionInput);
+
+        const serialInput = document.createElement('input');
+        serialInput.type = 'hidden';
+        serialInput.name = 'old_serial_number';
+        serialInput.value = document.querySelector('[name="old_serial_number"]').value;
+        form.appendChild(serialInput);
+
+        const equipmentInput = document.createElement('input');
+        equipmentInput.type = 'hidden';
+        equipmentInput.name = 'equipment_id';
+        equipmentInput.value = document.querySelector('[name="equipment_id"]').value;
+        form.appendChild(equipmentInput);
+
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+    }
 </script>
 @endsection

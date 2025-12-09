@@ -204,7 +204,7 @@
         const selectedOption = groupSelect.options[groupSelect.selectedIndex];
 
         if (selectedOption && selectedOption.value === '') {
-            priceInput.value = 0;
+            priceInput.value = '';
         } else if (selectedOption && selectedOption.dataset.totalPrice) {
             priceInput.value = selectedOption.dataset.totalPrice;
         }

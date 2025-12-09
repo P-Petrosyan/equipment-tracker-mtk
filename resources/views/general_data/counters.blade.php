@@ -62,7 +62,7 @@
             <tr>
                 <th>Name</th>
                 <th>Total Price</th>
-                <th>Notes</th>
+                <th>Notes(Quantity)</th>
                 <th>Actions</th>
             </tr>
             </thead>
