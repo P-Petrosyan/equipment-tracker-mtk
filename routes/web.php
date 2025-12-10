@@ -124,4 +124,5 @@ Route::post('/acts/assign-work', [ActController::class, 'assignWork'])->name('ac
 Route::post('/acts/remove-work', [ActController::class, 'removeWork'])->name('acts.remove-work');
 Route::post('/acts/add-all-works', [ActController::class, 'addAllWorks'])->name('acts.add-all-works');
 Route::post('/acts/remove-all-works', [ActController::class, 'removeAllWorks'])->name('acts.remove-all-works');
+Route::post('/acts/update-exit-dates', [ActController::class, 'updateExitDates'])->name('acts.update-exit-dates');
 Route::get('/acts/{act}/print', [ActController::class, 'printAct'])->name('acts.print');

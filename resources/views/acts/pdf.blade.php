@@ -30,13 +30,13 @@
     </div>
 
     <div style="margin-bottom: 15px;">
-        ք.Երևան <span style="float: right;"><span class="underline">{{ $act->act_date->format('d-m-Y') }}</span>թ.</span>
+        ք.Երևան <span style="float: right;"><span>{{ now()->format('d.m.Y') }}</span>թ.</span>
     </div>
 
     <div class="content">
-        Մենք. ներքոստորագրողներս՝ «Գազպրոմ Արմենիա» ՓԲԸ <span>{{ $act->partner->region }}</span> ԳԳՄ տնօրեն՝
-        <span>{{ $act->partner->tnoren }}</span>մի կողմից, "ՄՏԿ" ՓԲԸ տնօրեն  մյուս կողմից,
-        կազմեցինք սույն ակտը առ այն, որ ԳԳՄ -ի ակտերով "ՄՏԿ" ՓԲԸ -ին հանձնված
+        Մենք. ներքոստորագրողներս՝ «Գազպրոմ Արմենիա» ՓԲԸ <span>{{ $act->partner->region }}</span> տնօրեն՝
+        <span>{{ trim(substr($act->partner->tnoren, strrpos($act->partner->tnoren, '_') + 1)) }}</span> մի կողմից, «ՄՏԿ» ՓԲԸ տնօրեն՝ <span>{{$tnoren->titleholder}}</span>  մյուս կողմից,
+        կազմեցինք սույն ակտը առ այն, որ ԳԳՄ -ի ակտերով «ՄՏԿ» ՓԲԸ -ին հանձնված
         <span>{{ $act->works->count() }}</span> հատ գազի ազդանշանային սարքերը  հետ են վերադարձվել, որից <span>{{ $repairedWorks->count() }}</span> հատ
         նորոգված, <span>{{ $nonRepairedWorks->count() }}</span> հատ վերանորոգման ոչ ենթակա
         (հիմք՝ ակտ <span>@foreach($nonRepairedWorks as $work)N{{ $work->conclusion_number }}@if(!$loop->last); @endif @endforeach</span>)
@@ -86,20 +86,21 @@
             <td style="width: 50%; vertical-align: top;">Պատվիրատու</td>
         </tr>
         <tr>
-            <td style="vertical-align: top;">"ՄՏԿ" ՓԲԸ</td>
+            <td style="vertical-align: top;">«ՄՏԿ» ՓԲԸ</td>
             <td style="vertical-align: top;">«Գազպրոմ Արմենիա» ՓԲԸ</td>
         </tr>
         <tr>
-            <td style="vertical-align: top;">{{ $tnoren->title . ' ' . $tnoren->titleholder}}</td>
+            <td style="vertical-align: top;"></td>
             <td style="vertical-align: top;">{{ $act->partner->region }}</td>
         </tr>
+        <br>
         <tr>
-            <td style="vertical-align: top;"></td>
+            <td style="vertical-align: top;">{{ $tnoren->title . ' __________________ ' . $tnoren->titleholder}}</td>
             <td style="vertical-align: top;">{{ $act->partner->tnoren }}</td>
         </tr>
         <tr>
             <td style="vertical-align: top;"></td>
-            <td style="vertical-align: top;">{{ $act->partner->hashvapah }}</td>
+            <td style="vertical-align: top;"><br>{{ $act->partner->hashvapah }}</td>
         </tr>
     </table>
 </body>

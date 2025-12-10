@@ -134,10 +134,20 @@ class ActController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function updateExitDates(Request $request)
+    {
+        $actId = $request->act_id;
+        $act = Act::find($actId);
+
+        $act->works()->update(['exit_date' => now()->toDateString()]);
+
+        return response()->json(['success' => true]);
+    }
+
     public function printAct($id)
     {
         $act = Act::with(['partner', 'works.equipment', 'works.equipmentPartGroup'])->findOrFail($id);
-        $tnoren = Position::where('Title', 'Տնօրեն')->first();
+        $tnoren = Position::where('title', 'Տնօրեն')->first();
         $naming = Naming::where('name', 'Պայմանագիր')->first();
         $repairedWorks = $act->works()->where('non_repairable', 0)->get();
         $nonRepairedWorks = $act->works()->where('non_repairable', 1)->get();

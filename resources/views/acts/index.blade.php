@@ -93,7 +93,7 @@
             <div style="display: flex; align-items: center; gap: 10px; ">
                 <h5>Ակտին նշանակված աշխատանքներ</h5>
                 <button class="btn btn-sm btn-info" onclick="printAct()" id="print-act-btn" style="display: none;">Տպել ակտը</button>
-                <button>Թարմացնել ելքի ամսաթվերը</button>
+                <button onclick="updateExitDates()" class="btn btn-sm btn-warning">Թարմացնել ելքի ամսաթվերը</button>
                 <button>Հանձնման ընդունման ակտ</button>
             </div>
             <button onclick="removeAllWorks()" class="btn btn-sm btn-danger" id="remove-all-btn" style="display: none;">Remove All</button>
@@ -175,7 +175,6 @@ function selectAct(actId, partnerId, actDate, row) {
                         <td>${work.equipment_part_group_total_price || '-'}</td>
                         <td>${work.equipment_part_group ? work.equipment_part_group.name : '-'}</td>
                         <td>${work.non_repairable ? 'Այո' : 'Ոչ'}</td>
-
                         <td>${work.receive_date ? new Date(work.receive_date).toLocaleDateString('en-GB') : ''}</td>
                         <td>${work.exit_date ? new Date(work.exit_date).toLocaleDateString('en-GB') : ''}</td>
                         <td><button onclick="removeWork(${work.id})" class="btn btn-sm btn-danger hover:underline">Remove</button></td>
@@ -271,6 +270,28 @@ function printAct() {
     }
 
     window.open(`/acts/${selectedActId}/print`, '_blank');
+}
+
+function updateExitDates() {
+    if (!selectedActId) {
+        alert('Խնդրում ենք ընտրել ակտ');
+        return;
+    }
+
+    fetch('/acts/update-exit-dates', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            act_id: selectedActId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.querySelector('#acts-table .selected').click();
+    });
 }
 </script>
 
