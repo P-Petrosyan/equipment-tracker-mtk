@@ -85,7 +85,7 @@
 
                 <div id="print-preview-btn" style="display: none;">
                     <button type="button" onclick="openPrintPreview()" class="btn btn-sm btn-info">
-                        <i class="fa-solid fa-print"></i> Տպել նախնական
+                        <i class="fa-solid fa-print"></i> Տպել
                     </button>
                 </div>
             </div>

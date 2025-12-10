@@ -99,7 +99,7 @@
 
                 <div id="print-preview-btn" style="{{ $work->non_repairable ? '' : 'display: none;' }}">
                     <a href="{{ route('works.print-preview', $work) }}" target="_blank" class="btn btn-sm btn-info">
-                        <i class="fa-solid fa-print"></i> Տպել նախնական
+                        <i class="fa-solid fa-print"></i> Տպել
                     </a>
                 </div>
             </div>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Ակտ {{ $act->act_number }}</title>
     <style>
-        @page { margin: 15px; }
+        @page { margin: 15px 40px 15px 70px; }
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; line-height: 1.3; }
         .underline { border-bottom: 1px solid #000; display: inline-block; min-width: 80px; }
         .text-center { text-align: center; }
@@ -22,7 +22,7 @@
     </div>
 
     <div class="text-center bold" style="margin: 15px 0; font-size: 14px;">
-        ԱԿՏ N<span class="underline">{{ $act->act_number }}</span>
+        ԱԿՏ Nº<span>{{ $act->act_number }}</span>
     </div>
 
     <div class="text-center bold" style="margin: 15px 0;">
@@ -39,7 +39,7 @@
         կազմեցինք սույն ակտը առ այն, որ ԳԳՄ -ի ակտերով «ՄՏԿ» ՓԲԸ -ին հանձնված
         <span>{{ $act->works->count() }}</span> հատ գազի ազդանշանային սարքերը  հետ են վերադարձվել, որից <span>{{ $repairedWorks->count() }}</span> հատ
         նորոգված, <span>{{ $nonRepairedWorks->count() }}</span> հատ վերանորոգման ոչ ենթակա
-        (հիմք՝ ակտ <span>@foreach($nonRepairedWorks as $work)N{{ $work->conclusion_number }}@if(!$loop->last); @endif @endforeach</span>)
+        (հիմք՝ եզրակացություն <span>@foreach($nonRepairedWorks as $work)Nº{{ $work->conclusion_number }}@if(!$loop->last); @endif @endforeach</span>)
     </div>
 
     <table class="works-table">

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Եզրակացություն թիվ {{ $work->conclusion_number }}</title>
+    <title>Եզրակացություն Nº {{ $work->conclusion_number }}</title>
     <style>
         @page {
             size: A4;
@@ -112,7 +112,7 @@
     <div class="document">
         <div class="header">
             <div class="conclusion-number">
-                Եզրակացություն թիվ <strong>{{ $work->conclusion_number }}</strong>
+                Եզրակացություն Nº <strong>{{ $work->conclusion_number }}</strong>
             </div>
         </div>
 
