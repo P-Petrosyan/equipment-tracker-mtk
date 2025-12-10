@@ -122,3 +122,6 @@ Route::delete('/acts/{act}', [ActController::class, 'destroy'])->name('acts.dest
 Route::get('/acts/archived-works', [ActController::class, 'getArchivedWorks'])->name('acts.archived-works');
 Route::post('/acts/assign-work', [ActController::class, 'assignWork'])->name('acts.assign-work');
 Route::post('/acts/remove-work', [ActController::class, 'removeWork'])->name('acts.remove-work');
+Route::post('/acts/add-all-works', [ActController::class, 'addAllWorks'])->name('acts.add-all-works');
+Route::post('/acts/remove-all-works', [ActController::class, 'removeAllWorks'])->name('acts.remove-all-works');
+Route::get('/acts/{act}/print', [ActController::class, 'printAct'])->name('acts.print');

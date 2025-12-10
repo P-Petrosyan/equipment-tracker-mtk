@@ -48,11 +48,11 @@
                         <td>{{ $act->act_date->format('d/m/Y') }}</td>
                         <td>{{ $act->act_number }}</td>
                         <td>
-                            <form action="{{ route('acts.destroy', $act) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger hover:underline">Delete</button>
-                            </form>
+{{--                            <form action="{{ route('acts.destroy', $act) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display:inline;">--}}
+{{--                                @csrf--}}
+{{--                                @method('DELETE')--}}
+{{--                                <button type="submit" class="btn btn-sm btn-danger hover:underline">Delete</button>--}}
+{{--                            </form>--}}
                         </td>
                     </tr>
                 @endforeach
@@ -62,7 +62,10 @@
 
         <!-- Archived Works Table -->
         <div class="data-table-wrapper" style="flex: 1;">
-            <h5>Արխիվացված աշխատանքներ</h5>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h5>Արխիվացված աշխատանքներ</h5>
+                <button onclick="addAllWorks()" class="btn btn-sm btn-success" id="add-all-btn" style="display: none;">Add All</button>
+            </div>
         <table class="ms-table">
             <thead>
                 <tr>
@@ -86,7 +89,15 @@
 
     <!-- Assigned Works Table -->
     <div class="data-table-wrapper" style="margin-top: 10px;">
-        <h5>Ակտին նշանակված աշխատանքներ</h5>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 0 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; ">
+                <h5>Ակտին նշանակված աշխատանքներ</h5>
+                <button class="btn btn-sm btn-info" onclick="printAct()" id="print-act-btn" style="display: none;">Տպել ակտը</button>
+                <button>Թարմացնել ելքի ամսաթվերը</button>
+                <button>Հանձնման ընդունման ակտ</button>
+            </div>
+            <button onclick="removeAllWorks()" class="btn btn-sm btn-danger" id="remove-all-btn" style="display: none;">Remove All</button>
+        </div>
         <table class="ms-table">
             <thead>
                 <tr>
@@ -94,6 +105,7 @@
                     <th>Նոր համար</th>
                     <th>Կարգի գումար</th>
                     <th>Կարգ</th>
+                    <th>Չվերանորոգվող</th>
                     <th>Ստացման ամսաթիվ</th>
                     <th>Ելքի ամսաթիվ</th>
                     <th></th>
@@ -114,6 +126,9 @@ let selectedActId = null;
 function selectAct(actId, partnerId, actDate, row) {
     selectedActId = actId;
 
+    // Show print button
+    document.getElementById('print-act-btn').style.display = 'inline-block';
+
     // Highlight selected row
     document.querySelectorAll('#acts-table tr').forEach(r => r.classList.remove('selected'));
     row.classList.add('selected');
@@ -127,6 +142,7 @@ function selectAct(actId, partnerId, actDate, row) {
             archivedTbody.innerHTML = '';
 
             if (data.archived_works.length > 0) {
+                document.getElementById('add-all-btn').style.display = 'block';
                 data.archived_works.forEach(work => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -134,13 +150,14 @@ function selectAct(actId, partnerId, actDate, row) {
                         <td>${work.new_serial_number || '-'}</td>
                         <td>${work.equipment_part_group_total_price || '-'}</td>
                         <td>${work.equipment_part_group ? work.equipment_part_group.name : '-'}</td>
-                        <td>${new Date(work.receive_date).toLocaleDateString('en-GB')}</td>
-                        <td>${new Date(work.exit_date).toLocaleDateString('en-GB')}</td>
+                        <td>${work.receive_date ? new Date(work.receive_date).toLocaleDateString('en-GB') : ''}</td>
+                        <td>${work.exit_date ? new Date(work.exit_date).toLocaleDateString('en-GB') : ''}</td>
                         <td><button onclick="assignWork(${work.id})" class="btn btn-sm btn-primary hover:underline">Add</button></td>
                     `;
                     archivedTbody.appendChild(tr);
                 });
             } else {
+                document.getElementById('add-all-btn').style.display = 'none';
                 archivedTbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Արխիվացված աշխատանքներ չկան</td></tr>';
             }
 
@@ -149,6 +166,7 @@ function selectAct(actId, partnerId, actDate, row) {
             assignedTbody.innerHTML = '';
 
             if (data.assigned_works.length > 0) {
+                document.getElementById('remove-all-btn').style.display = 'block';
                 data.assigned_works.forEach(work => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -156,13 +174,16 @@ function selectAct(actId, partnerId, actDate, row) {
                         <td>${work.new_serial_number || '-'}</td>
                         <td>${work.equipment_part_group_total_price || '-'}</td>
                         <td>${work.equipment_part_group ? work.equipment_part_group.name : '-'}</td>
-                        <td>${new Date(work.receive_date).toLocaleDateString('en-GB')}</td>
-                        <td>${new Date(work.exit_date).toLocaleDateString('en-GB')}</td>
+                        <td>${work.non_repairable ? 'Այո' : 'Ոչ'}</td>
+
+                        <td>${work.receive_date ? new Date(work.receive_date).toLocaleDateString('en-GB') : ''}</td>
+                        <td>${work.exit_date ? new Date(work.exit_date).toLocaleDateString('en-GB') : ''}</td>
                         <td><button onclick="removeWork(${work.id})" class="btn btn-sm btn-danger hover:underline">Remove</button></td>
                     `;
                     assignedTbody.appendChild(tr);
                 });
             } else {
+                document.getElementById('remove-all-btn').style.display = 'none';
                 assignedTbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Նշանակված աշխատանքներ չկան</td></tr>';
             }
         })
@@ -207,6 +228,49 @@ function removeWork(workId) {
         // Refresh the tables
         document.querySelector('#acts-table .selected').click();
     });
+}
+
+function addAllWorks() {
+    fetch('/acts/add-all-works', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            act_id: selectedActId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.querySelector('#acts-table .selected').click();
+    });
+}
+
+function removeAllWorks() {
+    fetch('/acts/remove-all-works', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            act_id: selectedActId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.querySelector('#acts-table .selected').click();
+    });
+}
+
+function printAct() {
+    if (!selectedActId) {
+        alert('Խնդրում ենք ընտրել ակտ');
+        return;
+    }
+
+    window.open(`/acts/${selectedActId}/print`, '_blank');
 }
 </script>
 

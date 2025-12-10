@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Act;
+use App\Models\Naming;
 use App\Models\Partner;
+use App\Models\Position;
 use App\Models\Work;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ActController extends Controller
 {
@@ -93,5 +96,54 @@ class ActController extends Controller
         $work->update(['work_order_status' => 0]);
 
         return response()->json(['success' => true]);
+    }
+
+    public function addAllWorks(Request $request)
+    {
+        $actId = $request->act_id;
+        $act = Act::find($actId);
+
+        $works = Work::where('partner_id', $act->partner_id)
+            ->where('status', 1)
+            ->where('work_order_status', 0)
+            ->whereDate('receive_date', '<=', $act->act_date)
+            ->get();
+
+        foreach ($works as $work) {
+            if (!$act->works()->where('work_id', $work->id)->exists()) {
+                $act->works()->attach($work->id);
+                $work->update(['work_order_status' => 1]);
+            }
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    public function removeAllWorks(Request $request)
+    {
+        $actId = $request->act_id;
+        $act = Act::find($actId);
+
+        $assignedWorks = $act->works;
+
+        foreach ($assignedWorks as $work) {
+            $act->works()->detach($work->id);
+            $work->update(['work_order_status' => 0]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    public function printAct($id)
+    {
+        $act = Act::with(['partner', 'works.equipment', 'works.equipmentPartGroup'])->findOrFail($id);
+        $tnoren = Position::where('Title', 'Տնօրեն')->first();
+        $naming = Naming::where('name', 'Պայմանագիր')->first();
+        $repairedWorks = $act->works()->where('non_repairable', 0)->get();
+        $nonRepairedWorks = $act->works()->where('non_repairable', 1)->get();
+        $pdf = Pdf::loadView('acts.pdf', compact('act', 'tnoren', 'naming', 'repairedWorks', 'nonRepairedWorks'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download('act_' . $act->act_number . '.pdf');
     }
 }
