@@ -154,6 +154,6 @@ class ActController extends Controller
         $pdf = Pdf::loadView('acts.pdf', compact('act', 'tnoren', 'naming', 'repairedWorks', 'nonRepairedWorks'));
         $pdf->setPaper('A4', 'portrait');
 
-        return $pdf->download('act_' . $act->act_number . '.pdf');
+        return $pdf->download($act->partner->region .'Կատ-ակտ Nº' . $act->act_number . ' - ' . now()->format('d.m.Y') . '.pdf');
     }
 }
