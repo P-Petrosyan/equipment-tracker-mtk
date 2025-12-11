@@ -13,6 +13,7 @@ use App\Http\Controllers\PartController;
 use App\Http\Controllers\WorkController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ActController;
+use App\Http\Controllers\ReferenceController;
 use App\Models\Defect;
 use App\Models\Equipment;
 use App\Models\Naming;
@@ -128,3 +129,6 @@ Route::post('/acts/remove-all-works', [ActController::class, 'removeAllWorks'])-
 Route::post('/acts/update-exit-dates', [ActController::class, 'updateExitDates'])->name('acts.update-exit-dates');
 Route::get('/acts/{act}/print', [ActController::class, 'printAct'])->name('acts.print');
 Route::get('/acts/{act}/handover-pdf', [ActController::class, 'generateHandoverPdf'])->name('acts.handover-pdf');
+
+Route::get('/reference', [ReferenceController::class, 'index'])->name('reference.index');
+Route::get('/reference/print', [ReferenceController::class, 'print'])->name('reference.print');

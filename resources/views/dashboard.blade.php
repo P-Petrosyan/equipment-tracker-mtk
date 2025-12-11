@@ -70,7 +70,7 @@
                 <a href="{{ route('general-data') }}" class="dashboard-btn">
                     Ընդհանուր տվյալներ
                 </a>
-                <a href="{{ route('reports.index') }}" class="dashboard-btn">
+                <a href="{{ route('reference.index') }}" class="dashboard-btn">
                     Հաշվետվություններ
                 </a>
                 <a href="{{ route('acts.index') }}" class="dashboard-btn">
