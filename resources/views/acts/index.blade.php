@@ -94,7 +94,7 @@
                 <h5>Ակտին նշանակված աշխատանքներ</h5>
                 <button class="btn btn-sm btn-info" onclick="printAct()" id="print-act-btn" style="display: none;">Տպել ակտը</button>
                 <button onclick="updateExitDates()" class="btn btn-sm btn-warning">Թարմացնել ելքի ամսաթվերը</button>
-                <button>Հանձնման ընդունման ակտ</button>
+                <button onclick="generateHandoverPdf()" class="btn btn-sm btn-secondary" id="handover-pdf-btn" style="display: none;">Հանձնման ընդունման ակտ</button>
             </div>
             <button onclick="removeAllWorks()" class="btn btn-sm btn-danger" id="remove-all-btn" style="display: none;">Remove All</button>
         </div>
@@ -126,8 +126,9 @@ let selectedActId = null;
 function selectAct(actId, partnerId, actDate, row) {
     selectedActId = actId;
 
-    // Show print button
+    // Show print button and handover button
     document.getElementById('print-act-btn').style.display = 'inline-block';
+    document.getElementById('handover-pdf-btn').style.display = 'inline-block';
 
     // Highlight selected row
     document.querySelectorAll('#acts-table tr').forEach(r => r.classList.remove('selected'));
@@ -292,6 +293,15 @@ function updateExitDates() {
     .then(data => {
         document.querySelector('#acts-table .selected').click();
     });
+}
+
+function generateHandoverPdf() {
+    if (!selectedActId) {
+        alert('Խնդրում ենք ընտրել ակտ');
+        return;
+    }
+
+    window.open(`/acts/${selectedActId}/handover-pdf`, '_blank');
 }
 </script>
 

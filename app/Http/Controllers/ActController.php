@@ -156,4 +156,15 @@ class ActController extends Controller
 
         return $pdf->download($act->partner->region .' Կատ-ակտ Nº' . $act->act_number . ' - ' . now()->format('d.m.Y') . '.pdf');
     }
+
+    public function generateHandoverPdf($id)
+    {
+        $act = Act::with(['partner', 'works.equipment'])->findOrFail($id);
+        $tnoren = Position::where('title', 'Տնօրեն')->first();
+        $laborant = Position::first(); // Լաբորատորիայի ղեկավար
+        $pdf = Pdf::loadView('acts.handover-pdf', compact('act', 'tnoren', 'laborant'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download($act->partner->region .'Հանձ-ընդ-ակտ Nº' . $act->act_number . ' - ' . now()->format('d.m.Y') . '.pdf');
+    }
 }
