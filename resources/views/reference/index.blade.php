@@ -10,11 +10,11 @@
         <form method="GET" action="{{ route('reference.index') }}" style="display: flex; gap: 15px; align-items: end;">
             <div>
                 <label>Սկսման ամսաթիվ:</label>
-                <input type="date" name="start_date" class="form-control border p-2" value="{{ \Carbon\Carbon::parse($startDate)->format('d.m.Y') }}" required>
+                <input type="date" name="start_date" class="form-control border p-2" value="{{ $startDate }}" required>
             </div>
             <div>
                 <label>Ավարտի ամսաթիվ:</label>
-                <input type="date" name="end_date" class="form-control border p-2" value="{{ \Carbon\Carbon::parse($endDate)->format('d.m.Y') }}" required>
+                <input type="date" name="end_date" class="form-control border p-2" value="{{ $endDate }}" required>
             </div>
             <button type="submit" class="btn btn-primary">Ցույց տալ</button>
         </form>
