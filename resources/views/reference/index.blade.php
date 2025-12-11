@@ -82,5 +82,22 @@
     max-width: 1200px;
     margin: 0 auto;
 }
+
+input[type="date"]::-webkit-datetime-edit {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+input[type="date"]::-webkit-datetime-edit-day-field {
+    order: 1;
+}
+
+input[type="date"]::-webkit-datetime-edit-month-field {
+    order: 2;
+}
+
+input[type="date"]::-webkit-datetime-edit-year-field {
+    order: 3;
+}
 </style>
 @endsection

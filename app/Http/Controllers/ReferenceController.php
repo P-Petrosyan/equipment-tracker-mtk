@@ -41,6 +41,6 @@ class ReferenceController extends Controller
         $pdf = Pdf::loadView('reference.pdf', compact('acts', 'naming', 'vachNaxagah', 'tnoren', 'startDate', 'endDate'));
         $pdf->setPaper('A4', 'portrait');
 
-        return $pdf->download('Գազպրոմ տեղեկանք ' . $endDate . '.pdf');
+        return $pdf->download('Գազպրոմ տեղեկանք ' . \Carbon\Carbon::parse($endDate)->format('d.m.Y') . '.pdf');
     }
 }

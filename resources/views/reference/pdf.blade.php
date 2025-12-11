@@ -66,7 +66,7 @@
     </div>
 
     <div class="date">
-        <span style="float: right;"><span>{{ now()->format('d.m.Y') }}</span>թ.</span>
+        <span style="float: right;"><span>{{ \Carbon\Carbon::parse($endDate)->format('d.m.Y') }}</span>թ.</span>
     </div>
 
     @if($acts->count() > 0)
