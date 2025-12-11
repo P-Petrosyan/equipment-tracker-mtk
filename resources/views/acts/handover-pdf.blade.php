@@ -7,7 +7,7 @@
         .header { text-align: center; margin-bottom: 30px; }
         .title { font-size: 14px; font-weight: bold; margin: 5px 0; }
         .date { text-align: right; margin: 20px 0; }
-        .content { margin: 20px 0; text-align: justify; }
+        .content { margin: 20px 0; text-align: justify; line-height: 1.8; }
         table { width: 100%; border-collapse: collapse; margin: 20px 0; }
         th, td { border: 1px solid black; padding: 8px; text-align: left; }
         th { background-color: #f0f0f0; font-weight: bold; }
@@ -28,8 +28,10 @@
 
     <div class="content">
         <p style="margin-left: 10px">Մենք, ներքոստորագրողներս՝</p>
-        <span style="margin-left: 10px">«ՄՏԿ» ՓԲԸ</span> <span>{{$laborant->title}}</span> <span>{{$laborant->titleholder}}</span>-ը և <span>{{ $act->partner->region }}</span> ________________________
-        ________________________ կազմեցինք սույն ակտը առ  այն, որ կից ակտով(երով) ՝ նորոգումից hետ են վերադարձվում
+        <span style="margin-left: 10px">«ՄՏԿ» ՓԲԸ</span> <span>{{$laborant->title}}</span> <span>{{$laborant->titleholder}}</span>-ը և
+        <br>
+        <span>{{ $act->partner->region }}</span> _____________________________________________________________________ կազմեցինք սույն ակտը առ  այն,
+        որ կից ակտով(երով) ՝ նորոգումից hետ են վերադարձվում`
     </div>
 
     <div style="margin: 20px 0;">
@@ -62,7 +64,7 @@
         <p>Հանձնեց՝   <span>{{$laborant->title}}</span> ___________________ <span>{{$laborant->titleholder}}</span></p>
         <br>
         <div>
-            <p>Ստացավ՝ <span>{{ $act->partner->region }}</span> ներկայացուցիչ ՝ ________________________</p>
+            <p>Ստացավ՝ <span>{{ $act->partner->region }}</span> ներկայացուցիչ ՝ ________________________________</p>
             <p style="text-align: center; font-size: 8px;">անուն, ազգանուն</p>
         </div>
     </div>

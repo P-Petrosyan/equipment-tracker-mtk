@@ -165,6 +165,6 @@ class ActController extends Controller
         $pdf = Pdf::loadView('acts.handover-pdf', compact('act', 'tnoren', 'laborant'));
         $pdf->setPaper('A4', 'portrait');
 
-        return $pdf->download($act->partner->region .'Հանձ-ընդ-ակտ Nº' . $act->act_number . ' - ' . now()->format('d.m.Y') . '.pdf');
+        return $pdf->download($act->partner->region .' Հանձ-ընդ-ակտ Nº' . $act->act_number . ' - ' . now()->format('d.m.Y') . '.pdf');
     }
 }
