@@ -43,16 +43,12 @@
                 </form>
             </tr>
                 @foreach($acts as $act)
-                    <tr onclick="selectAct({{ $act->id }}, {{ $act->partner_id }}, '{{ $act->act_date->format('Y-m-d') }}', this)" style="cursor: pointer;">
-                        <td>{{ $act->partner->region }}</td>
-                        <td>{{ $act->act_date->format('d/m/Y') }}</td>
-                        <td>{{ $act->act_number }}</td>
+                    <tr id="act-row-{{ $act->id }}" onclick="selectAct({{ $act->id }}, {{ $act->partner_id }}, '{{ $act->act_date->format('Y-m-d') }}', this)" style="cursor: pointer;">
+                        <td class="partner-cell" data-partner-id="{{ $act->partner_id }}">{{ $act->partner->region }}</td>
+                        <td class="date-cell" data-date="{{ $act->act_date->format('Y-m-d') }}">{{ $act->act_date->format('d/m/Y') }}</td>
+                        <td class="number-cell">{{ $act->act_number }}</td>
                         <td>
-{{--                            <form action="{{ route('acts.destroy', $act) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display:inline;">--}}
-{{--                                @csrf--}}
-{{--                                @method('DELETE')--}}
-{{--                                <button type="submit" class="btn btn-sm btn-danger hover:underline">Delete</button>--}}
-{{--                            </form>--}}
+                            <button onclick="editAct({{ $act->id }}, event)" class="btn btn-sm btn-primary edit-btn">Edit</button>
                         </td>
                     </tr>
                 @endforeach
@@ -302,6 +298,74 @@ function generateHandoverPdf() {
     }
 
     window.open(`/acts/${selectedActId}/handover-pdf`, '_blank');
+}
+
+const partners = @json($partners);
+
+function editAct(actId, event) {
+    event.stopPropagation();
+    const row = document.getElementById(`act-row-${actId}`);
+    const partnerCell = row.querySelector('.partner-cell');
+    const dateCell = row.querySelector('.date-cell');
+    const numberCell = row.querySelector('.number-cell');
+    const actionCell = row.querySelector('td:last-child');
+
+    const partnerId = partnerCell.dataset.partnerId;
+    const currentDate = dateCell.dataset.date;
+    const currentNumber = numberCell.textContent;
+
+    let partnerOptions = '';
+    partners.forEach(partner => {
+        const selected = partnerId == partner.id ? 'selected' : '';
+        partnerOptions += `<option value="${partner.id}" ${selected}>${partner.region}</option>`;
+    });
+
+    partnerCell.innerHTML = `<select class="border p-1 w-full edit-partner">${partnerOptions}</select>`;
+    dateCell.innerHTML = `<input type="date" value="${currentDate}" class="border p-1 w-full edit-date">`;
+    numberCell.innerHTML = `<input type="text" value="${currentNumber}" class="border p-1 w-full edit-number">`;
+
+    actionCell.innerHTML = `
+        <button onclick="saveAct(${actId})" class="btn btn-sm btn-primary">Save</button>
+        <button onclick="cancelEdit(${actId})" class="btn btn-sm btn-secondary">Cancel</button>
+    `;
+
+    row.onclick = null;
+}
+
+function saveAct(actId) {
+    const row = document.getElementById(`act-row-${actId}`);
+    const partnerId = row.querySelector('.edit-partner').value;
+    const actDate = row.querySelector('.edit-date').value;
+    const actNumber = row.querySelector('.edit-number').value;
+
+    fetch(`/acts/${actId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            partner_id: partnerId,
+            act_date: actDate,
+            act_number: actNumber
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error updating act');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error updating act');
+    });
+}
+
+function cancelEdit(actId) {
+    location.reload();
 }
 </script>
 

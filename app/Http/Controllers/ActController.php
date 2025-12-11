@@ -33,6 +33,19 @@ class ActController extends Controller
         return redirect()->route('acts.index')->with('success', 'Act created successfully');
     }
 
+    public function update(Request $request, Act $act)
+    {
+        $request->validate([
+            'partner_id' => 'required|exists:partners,id',
+            'act_date' => 'required|date',
+            'act_number' => 'required|string|max:255'
+        ]);
+
+        $act->update($request->all());
+
+        return response()->json(['success' => true]);
+    }
+
     public function destroy(Act $act)
     {
         $act->delete();

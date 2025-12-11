@@ -32,7 +32,7 @@
                 <td>
                     <form action="{{ route('reasons.store') }}" method="POST" style="display:inline;">
                         @csrf
-                        <input type="text" name="name" placeholder="New SS Name" class="border p-1 w-full" required>
+                        <input type="text" name="name" placeholder="Reason name" class="border p-1 w-full" required>
                 </td>
                 <td>
                         <button type="submit" class="text-green-600 font-bold">Add</button>

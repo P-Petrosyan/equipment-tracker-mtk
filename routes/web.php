@@ -118,6 +118,7 @@ Route::post('/reports/generate', [ReportController::class, 'generate'])->name('r
 
 Route::get('/acts', [ActController::class, 'index'])->name('acts.index');
 Route::post('/acts', [ActController::class, 'store'])->name('acts.store');
+Route::put('/acts/{act}', [ActController::class, 'update'])->name('acts.update');
 Route::delete('/acts/{act}', [ActController::class, 'destroy'])->name('acts.destroy');
 Route::get('/acts/archived-works', [ActController::class, 'getArchivedWorks'])->name('acts.archived-works');
 Route::post('/acts/assign-work', [ActController::class, 'assignWork'])->name('acts.assign-work');
