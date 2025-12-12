@@ -367,6 +367,8 @@ function saveAct(actId) {
 function cancelEdit(actId) {
     location.reload();
 }
+
+
 </script>
 
 <style>
