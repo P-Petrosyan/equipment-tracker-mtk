@@ -30,7 +30,7 @@ class PartsUsedExport implements FromArray
         $data = [];
         foreach ($acts->groupBy('partner_id') as $partnerActs) {
             $partner = $partnerActs->first()->partner;
-            $data[] = [$partner->region , $this->startDate . ' - ' , $this->endDate , '', ''];
+            $data[] = [$partner->region . ' '. $this->startDate . ' - ' . $this->endDate , '', '', '', ''];
             $data[] = ['Սարք', 'Գործարանային համար', 'Չվերանորոգվող', 'Պահեստամասի (աշխատանքի) անվանում [ քանակ x միավորի գին = ընդհանուր գումար դր]', 'Վերանորոգման արժեք'];
 
             foreach ($partnerActs as $act) {
@@ -41,7 +41,7 @@ class PartsUsedExport implements FromArray
                         foreach ($work->equipmentPartGroup->parts as $part) {
                             $partTotal = $part->pivot->quantity * ($part->pivot->unit_price ?? $part->unit_price );
                             $totalPrice += $partTotal;
-                            $partsCalculation[] = $part->code . ' ' . $part->name . ' ' . $part->pivot->quantity . ' x ' . ($part->pivot->unit_price ?? $part->unit_price ). ' = ' . $partTotal;
+                            $partsCalculation[] = $part->code . ' ' . $part->name . ' [' . number_format($part->pivot->quantity) . ' x ' . ($part->pivot->unit_price ?? $part->unit_price ). ' = ' . $partTotal . ']';
                         }
 
                         $data[] = [
