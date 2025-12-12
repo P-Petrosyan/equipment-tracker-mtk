@@ -16,7 +16,7 @@
 
 <body>
         <div class="brand">
-            <a href="/" style="display: flex; align-items: center; gap: 10px;  color: #18326c">
+            <a href="{{ route('dashboard') }}" style="display: flex; align-items: center; gap: 10px;  color: #18326c">
                 <img src="{{ asset('images/logo.webp') }}" alt="MTK Logo" style="height: 60px; width: auto;">
                 Ձայնաազդանշանային սարքերի վերանորոգում
             </a>
