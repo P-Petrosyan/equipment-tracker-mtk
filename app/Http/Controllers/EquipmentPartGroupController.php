@@ -44,8 +44,11 @@ class EquipmentPartGroupController extends Controller
             'unit_price' => 'nullable|numeric|min:0'
         ]);
 
+        $part = \App\Models\Part::find($request->part_id);
+        
         $equipmentPartGroup->parts()->attach($request->part_id, [
             'quantity' => $request->quantity,
+            'unit_price' => $request->unit_price ?? $part->unit_price,
         ]);
 
         $this->updateGroupTotalPrice($equipmentPartGroup);
@@ -62,10 +65,10 @@ class EquipmentPartGroupController extends Controller
 
     private function updateGroupTotalPrice(EquipmentPartGroup $equipmentPartGroup)
     {
-        $totalPrice = $equipmentPartGroup->parts()->withPivot('quantity')
+        $totalPrice = $equipmentPartGroup->parts()->withPivot('quantity', 'unit_price')
             ->get()
             ->sum(function ($part) {
-                return $part->unit_price * $part->pivot->quantity;
+                return ($part->pivot->unit_price ?? $part->unit_price) * $part->pivot->quantity;
             });
 
         $equipmentPartGroup->update(['total_price' => $totalPrice]);

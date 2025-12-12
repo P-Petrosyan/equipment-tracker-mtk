@@ -180,4 +180,6 @@ class ActController extends Controller
 
         return $pdf->download($act->partner->region .' Հանձ-ընդ-ակտ Nº' . $act->act_number . ' - ' . now()->format('d.m.Y') . '.pdf');
     }
+
+
 }

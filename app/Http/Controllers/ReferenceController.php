@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Act;
 use App\Models\Naming;
+use App\Models\Partner;
 use App\Models\Position;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReferenceController extends Controller
 {
@@ -31,7 +33,10 @@ class ReferenceController extends Controller
         $endDate = $request->get('end_date');
         $acts = Act::with(['partner', 'works.equipment', 'works.equipmentPartGroup'])
             ->whereBetween('act_date', [$startDate, $endDate])
-            ->orderBy('act_date', 'desc')
+            ->join('partners', 'acts.partner_id', '=', 'partners.id')
+            ->orderBy('partners.region')
+            ->orderBy('acts.act_date', 'desc')
+            ->select('acts.*')
             ->get();
 
         $tnoren = Position::where('title', 'Տնօրեն')->first();
@@ -42,5 +47,37 @@ class ReferenceController extends Controller
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('Գազպրոմ տեղեկանք ' . \Carbon\Carbon::parse($endDate)->format('d.m.Y') . '.pdf');
+    }
+
+    public function getPartnersByPeriod(Request $request)
+    {
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+
+        if (!$startDate || !$endDate) {
+            return response()->json(['partners' => []]);
+        }
+
+        $partners = Act::with('partner')
+            ->whereBetween('act_date', [$startDate, $endDate])
+            ->get()
+            ->pluck('partner')
+            ->unique('id')
+            ->groupBy('region')
+            ->map(function($regionPartners) {
+                return $regionPartners->unique('id')->values();
+            });
+
+        return response()->json(['partners' => $partners]);
+    }
+
+    public function exportPartsUsed(Request $request)
+    {
+        $partnerIds = explode(',', $request->get('partner_ids'));
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        $partner = Partner::find($partnerIds[0]);
+
+        return Excel::download(new \App\Exports\PartsUsedExport($partnerIds, $startDate, $endDate), $partner->region . ' ' . now()->format('d-m-y') . '.xlsx');
     }
 }
