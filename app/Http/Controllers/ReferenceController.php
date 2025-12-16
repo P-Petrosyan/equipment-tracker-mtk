@@ -84,6 +84,13 @@ class ReferenceController extends Controller
         $tnoren = Position::where('title', 'Տնօրեն')->first();
         $labXekavar = Position::where('id', 1)->first();
 
+        $armenianMonths = [
+            'January' => 'հունվար', 'February' => 'փետրվար', 'March' => 'մարտ',
+            'April' => 'ապրիլ', 'May' => 'մայիս', 'June' => 'հունիս',
+            'July' => 'հուլիս', 'August' => 'օգոստոս', 'September' => 'սեպտեմբեր',
+            'October' => 'հոկտեմբեր', 'November' => 'նոյեմբեր', 'December' => 'դեկտեմբեր'
+        ];
+
         $acts = Act::with(['partner', 'works.equipment'])
             ->whereBetween('act_date', [$startDate, $endDate])
             ->get();
@@ -108,7 +115,7 @@ class ReferenceController extends Controller
             }
         }
 
-        $pdf = Pdf::loadView('reference.trilateral', compact('partnerData', 'glxavorChartaraget', 'tnoren', 'tnoreniTexakal', 'labXekavar', 'labVarich', 'SCHAM', 'startDate', 'endDate'));
+        $pdf = Pdf::loadView('reference.trilateral', compact('partnerData', 'glxavorChartaraget', 'tnoren', 'tnoreniTexakal', 'labXekavar', 'labVarich', 'SCHAM', 'armenianMonths', 'startDate', 'endDate'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('ՍՉԱՄ Եռակողմ ակտ ' . \Carbon\Carbon::parse($endDate)->format('d.m.Y') . '.pdf');

@@ -160,7 +160,7 @@
         Մենք` ներքոստորագրողներս, «ՄՏԿ» ՓԲԸ գազի ձայնաազդանշանային սարքերի
         ստուգաչափման աջակցության <span>{{$labXekavar->title . ' ' . $labXekavar->titleholder}}ը,</span>
         «Ստանդարտացման և չափագիտության ազգային մարմին» ՓԲԸ <span>{{ $labVarich->name . ' ' . $labVarich->text}}ը</span>
-        կազմեցինք սույն ակտն այն մասին, որ <span>{{ \Carbon\Carbon::parse($endDate)->format('Y') . 'թ. ' . \Carbon\Carbon::parse($endDate)->format('F') }}</span>
+        կազմեցինք սույն ակտն այն մասին, որ <span>{{ \Carbon\Carbon::parse($endDate)->format('Y') . 'թ. ' . $armenianMonths[\Carbon\Carbon::parse($endDate)->format('F')] }}</span>
         ամսվա ընթացքում, համաձայն «Գազպրոմ Արմենիա» ՓԲԸ և «Ստանդարտացման և չափագիտության ազգային
         մարմին» ՓԲԸ միջև <span> {{ $SCHAM->text }}</span> պայմանագրի «ՄՏԿ» ՓԲԸ-ում կատարվել է HENAN
         CHICHENG ELECTRIC CO. LTD ընկերության արտադրության HD2000 տիպի
