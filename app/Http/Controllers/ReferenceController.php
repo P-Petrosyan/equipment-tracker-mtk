@@ -71,6 +71,49 @@ class ReferenceController extends Controller
         return response()->json(['partners' => $partners]);
     }
 
+    public function trilateral(Request $request)
+    {
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+
+        $glxavorChartaraget = Naming::where('id', 3)->first();
+        $tnoreniTexakal = Naming::where('id', 4)->first();
+        $labVarich = Naming::where('id', 5)->first();
+        $SCHAM = Naming::where('id', 6)->first();
+
+        $tnoren = Position::where('title', 'Տնօրեն')->first();
+        $labXekavar = Position::where('id', 1)->first();
+
+        $acts = Act::with(['partner', 'works.equipment'])
+            ->whereBetween('act_date', [$startDate, $endDate])
+            ->get();
+
+        // Group works by partner and calculate totals
+        $partnerData = [];
+        foreach ($acts as $act) {
+            $partnerName = $act->partner->region;
+            if (!isset($partnerData[$partnerName])) {
+                $partnerData[$partnerName] = [
+                    'name' => $partnerName,
+                    'total_works' => 0,
+                    'total_price' => 0
+                ];
+            }
+
+            $repairableWorks = $act->works->where('non_repairable', 0);
+            $partnerData[$partnerName]['total_works'] += $repairableWorks->count();
+
+            foreach ($repairableWorks as $work) {
+                $partnerData[$partnerName]['total_price'] += $work->equipment->stug_price ?? 0;
+            }
+        }
+
+        $pdf = Pdf::loadView('reference.trilateral', compact('partnerData', 'glxavorChartaraget', 'tnoren', 'tnoreniTexakal', 'labXekavar', 'labVarich', 'SCHAM', 'startDate', 'endDate'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download('ՍՉԱՄ Եռակողմ ակտ ' . \Carbon\Carbon::parse($endDate)->format('d.m.Y') . '.pdf');
+    }
+
     public function exportPartsUsed(Request $request)
     {
         $partnerIds = explode(',', $request->get('partner_ids'));

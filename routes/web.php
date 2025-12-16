@@ -132,5 +132,6 @@ Route::get('/acts/{act}/handover-pdf', [ActController::class, 'generateHandoverP
 
 Route::get('/reference', [ReferenceController::class, 'index'])->name('reference.index');
 Route::get('/reference/print', [ReferenceController::class, 'print'])->name('reference.print');
+Route::get('/reference/trilateral', [ReferenceController::class, 'trilateral'])->name('reference.trilateral');
 Route::get('/reference/partners-by-period', [ReferenceController::class, 'getPartnersByPeriod'])->name('reference.partners-by-period');
 Route::get('/reference/export-parts-used', [ReferenceController::class, 'exportPartsUsed'])->name('reference.export-parts-used');

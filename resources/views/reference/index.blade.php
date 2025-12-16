@@ -17,6 +17,7 @@
                 <input type="date" name="end_date" id="end_date" class="form-control border p-2" value="{{ $endDate }}" required>
             </div>
             <button type="submit" class="btn btn-sm btn-primary">Ցույց տալ</button>
+            <a href="{{ route('reference.trilateral', ['start_date' => $startDate, 'end_date' => $endDate]) }}" class="btn btn-sm btn-info" style="margin-left: 60px" target="_blank">ՍՉԱՄ Եռակողմ</a>
         </form>
     </div>
 
