@@ -39,11 +39,18 @@ class ReferenceController extends Controller
             ->select('acts.*')
             ->get();
 
+        $armenianMonths = [
+            'January' => 'հունվար', 'February' => 'փետրվար', 'March' => 'մարտ',
+            'April' => 'ապրիլ', 'May' => 'մայիս', 'June' => 'հունիս',
+            'July' => 'հուլիս', 'August' => 'օգոստոս', 'September' => 'սեպտեմբեր',
+            'October' => 'հոկտեմբեր', 'November' => 'նոյեմբեր', 'December' => 'դեկտեմբեր'
+        ];
+
         $tnoren = Position::where('title', 'Տնօրեն')->first();
         $naming = Naming::where('name', 'Պայմանագիր')->first();
         $vachNaxagah = Naming::where('id', 2)->first(); // Վարչության նախագահ-Գլխավոր տնօրեն
 
-        $pdf = Pdf::loadView('reference.pdf', compact('acts', 'naming', 'vachNaxagah', 'tnoren', 'startDate', 'endDate'));
+        $pdf = Pdf::loadView('reference.pdf', compact('acts', 'naming', 'armenianMonths', 'vachNaxagah', 'tnoren', 'startDate', 'endDate'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('Գազպրոմ տեղեկանք ' . \Carbon\Carbon::parse($endDate)->format('d.m.Y') . '.pdf');

@@ -54,6 +54,9 @@ Route::get('/general-data/{tab?}', function ($tab = 'partners') {
         case 'parts':
             $data['parts'] = Part::all();
             break;
+        case 'snapshots':
+            $data['snapshots'] = \App\Models\PartsSnapshot::orderBy('snapshot_date', 'desc')->get();
+            break;
         default:
             $tab = 'partners';
             $data['partners'] = \App\Models\Partner::with('structures')->get();
@@ -97,6 +100,11 @@ Route::delete('/parts/{part}', [PartController::class, 'destroy'])->name('parts.
 Route::post('/parts/{part}/add-quantity', [PartController::class, 'addQuantity'])->name('parts.add-quantity');
 Route::get('/parts/export', [PartController::class, 'export'])->name('parts.export');
 Route::post('/parts/import', [PartController::class, 'import'])->name('parts.import');
+Route::post('/parts/import-quantities', [PartController::class, 'importQuantities'])->name('parts.import-quantities');
+Route::post('/parts/create-snapshot', [PartController::class, 'createSnapshot'])->name('parts.create-snapshot');
+Route::get('/parts/snapshots', [PartController::class, 'getSnapshots'])->name('parts.snapshots');
+Route::get('/parts/snapshot/{date}', [PartController::class, 'viewSnapshot'])->name('parts.view-snapshot');
+Route::get('/parts/snapshot-data/{date}', [PartController::class, 'getSnapshotData'])->name('parts.snapshot-data');
 
 Route::post('/equipment-part-groups', [EquipmentPartGroupController::class, 'store'])->name('equipment-part-groups.store');
 Route::patch('/equipment-part-groups/{equipmentPartGroup}', [EquipmentPartGroupController::class, 'update'])->name('equipment-part-groups.update');

@@ -10,6 +10,7 @@ class Part extends Model
         'code',
         'name',
         'quantity',
+        'used_quantity',
         'unit_price',
         'measure_unit',
         'description'

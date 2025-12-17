@@ -20,6 +20,14 @@
 </div>
 
 <div class="container">
+    @if($errors->any())
+        <div style="background-color: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+            @foreach($errors->all() as $error)
+                <p style="margin: 0;">{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
+    
     <form action="{{ route('works.update', $work) }}" method="POST">
         @csrf
         @method('PATCH')

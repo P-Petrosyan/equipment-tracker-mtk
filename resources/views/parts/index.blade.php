@@ -32,6 +32,15 @@
         <i class="fa-solid fa-arrow-left"></i> Գլխավոր էջ
     </a>
 </div>
+<div style="margin-bottom: 10px;">
+    <form action="{{ route('parts.import-quantities') }}" method="POST" enctype="multipart/form-data" style="display: inline-flex; gap: 5px;">
+        @csrf
+        <input type="file" name="file" accept=".xlsx,.xls" required class="form-control" style="width: auto;">
+        <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fa-solid fa-file-import"></i> Import Quantities
+        </button>
+    </form>
+</div>
 <div class="data-table-wrapper">
     <table class="ms-table">
         <thead>

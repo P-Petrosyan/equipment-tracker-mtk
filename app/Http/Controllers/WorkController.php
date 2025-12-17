@@ -83,9 +83,24 @@ class WorkController extends Controller
         ]);
 
         if ($validated['equipment_part_group_id']) {
-            $group = EquipmentPartGroup::find($validated['equipment_part_group_id']);
-            if ($group && is_numeric($group->notes) && $group->notes > 0) {
-                $group->decrement('notes');
+            $group = EquipmentPartGroup::with('parts')->find($validated['equipment_part_group_id']);
+            if ($group) {
+                // Validate part availability first
+                $insufficientParts = $this->validatePartAvailability($group);
+                if ($insufficientParts) {
+                    return back()->withErrors(['parts_error' => $insufficientParts])->withInput();
+                }
+
+                if (is_numeric($group->notes) && $group->notes > 0) {
+                    $group->decrement('notes');
+
+                    // Update parts quantities
+                    foreach ($group->parts as $part) {
+                        $pivotQuantity = $part->pivot->quantity;
+                        $part->decrement('quantity', $pivotQuantity);
+                        $part->increment('used_quantity', $pivotQuantity);
+                    }
+                }
             }
         }
 
@@ -117,17 +132,43 @@ class WorkController extends Controller
         $oldGroupId = $work->equipment_part_group_id;
         $newGroupId = $validated['equipment_part_group_id'];
 
+        // Validate new group BEFORE making any changes
+        if ($oldGroupId != $newGroupId && $newGroupId) {
+            $newGroup = EquipmentPartGroup::with('parts')->find($newGroupId);
+            if ($newGroup) {
+                $insufficientParts = $this->validatePartAvailability($newGroup);
+                if ($insufficientParts) {
+                    return back()->withErrors(['parts_error' => $insufficientParts])->withInput();
+                }
+            }
+        }
+
+        // Now proceed with database changes since validation passed
         if ($oldGroupId != $newGroupId) {
             if ($oldGroupId) {
-                $oldGroup = EquipmentPartGroup::find($oldGroupId);
+                $oldGroup = EquipmentPartGroup::with('parts')->find($oldGroupId);
                 if ($oldGroup && is_numeric($oldGroup->notes)) {
                     $oldGroup->increment('notes');
+
+                    // Restore parts quantities
+                    foreach ($oldGroup->parts as $part) {
+                        $pivotQuantity = $part->pivot->quantity;
+                        $part->increment('quantity', $pivotQuantity);
+                        $part->decrement('used_quantity', $pivotQuantity);
+                    }
                 }
             }
             if ($newGroupId) {
-                $newGroup = EquipmentPartGroup::find($newGroupId);
+                $newGroup = EquipmentPartGroup::with('parts')->find($newGroupId);
                 if ($newGroup && is_numeric($newGroup->notes) && $newGroup->notes > 0) {
                     $newGroup->decrement('notes');
+
+                    // Update parts quantities
+                    foreach ($newGroup->parts as $part) {
+                        $pivotQuantity = $part->pivot->quantity;
+                        $part->decrement('quantity', $pivotQuantity);
+                        $part->increment('used_quantity', $pivotQuantity);
+                    }
                 }
             }
         }
@@ -172,6 +213,26 @@ class WorkController extends Controller
 
         $position = Position::first();
         return view('works.print-preview', compact('work', 'position'));
+    }
+
+    private function validatePartAvailability($group)
+    {
+        $insufficientParts = [];
+
+        foreach ($group->parts as $part) {
+            $requiredQuantity = $part->pivot->quantity;
+            $availableQuantity = $part->quantity ?? 0;
+
+            if ($availableQuantity < $requiredQuantity) {
+                $insufficientParts[] = " {$part->code} ({$part->name}): Անհրաժեշտ {$requiredQuantity}, առկա {$availableQuantity}";
+            }
+        }
+
+        if (!empty($insufficientParts)) {
+            return 'Անբավարար քանակ: ' . implode('; ', $insufficientParts);
+        }
+
+        return null;
     }
 
     private function getNextConclusionNumber()

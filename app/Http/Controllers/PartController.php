@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Part;
+use App\Models\PartsSnapshot;
 use App\Exports\PartsExport;
 use App\Imports\PartsImport;
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ class PartController extends Controller
             'name' => 'required|string|max:255',
             'unit_price' => 'required|numeric|min:0',
             'quantity' => 'nullable|integer|min:1',
+            'used_quantity' => 'nullable|integer|min:0',
             'measure_unit' => 'string|max:255',
         ]);
 
@@ -37,6 +39,7 @@ class PartController extends Controller
             'name' => 'sometimes|required|string|max:255',
             'unit_price' => 'sometimes|required|numeric|min:0',
             'quantity' => 'nullable|integer|min:1',
+            'used_quantity' => 'nullable|integer|min:0',
             'measure_unit' => 'sometimes|required|string|max:255',
         ]);
 
@@ -91,5 +94,65 @@ class PartController extends Controller
         Excel::import(new PartsImport, $request->file('file'));
 
         return redirect()->route('general-data', 'parts')->with('success', 'Parts imported successfully.');
+    }
+
+    public function importQuantities(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
+
+        Excel::import(new \App\Imports\PartsQuantityImport, $request->file('file'));
+
+        return redirect()->route('parts.index')->with('success', 'Quantities imported successfully.');
+    }
+
+    public function createSnapshot(Request $request)
+    {
+        $request->validate([
+            'snapshot_date' => 'required|date|unique:parts_snapshots,snapshot_date'
+        ]);
+
+        $partsData = Part::all()->toArray();
+        
+        PartsSnapshot::create([
+            'snapshot_date' => $request->snapshot_date,
+            'parts_data' => $partsData
+        ]);
+
+        // Reset parts table
+        Part::query()->update([
+            'quantity' => 0,
+            'used_quantity' => 0
+        ]);
+
+        return redirect()->route('general-data', 'parts')->with('success', 'Snapshot created and parts reset successfully.');
+    }
+
+    public function getSnapshots()
+    {
+        $snapshots = PartsSnapshot::orderBy('snapshot_date', 'desc')->get();
+        return response()->json($snapshots);
+    }
+
+    public function viewSnapshot($date)
+    {
+        $snapshot = PartsSnapshot::where('snapshot_date', $date)->first();
+        if (!$snapshot) {
+            return redirect()->route('general-data', 'parts')->with('error', 'Snapshot not found.');
+        }
+
+        $parts = collect($snapshot->parts_data);
+        return view('parts.snapshot', compact('parts', 'date'));
+    }
+
+    public function getSnapshotData($date)
+    {
+        $snapshot = PartsSnapshot::where('snapshot_date', $date)->first();
+        if (!$snapshot) {
+            return response()->json(['error' => 'Snapshot not found'], 404);
+        }
+
+        return response()->json($snapshot);
     }
 }

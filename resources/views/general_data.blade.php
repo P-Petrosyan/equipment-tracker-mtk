@@ -118,6 +118,7 @@
 {{--            <a href="{{ route('general-data', 'calendar') }}" class="nav-tab {{ $tab === 'calendar' ? 'active' : '' }}">Օրացույց</a>--}}
             <a href="{{ route('general-data', 'namings') }}" class="nav-tab {{ $tab === 'namings' ? 'active' : '' }}">Անվանումներ</a>
             <a href="{{ route('general-data', 'parts') }}" class="nav-tab {{ $tab === 'parts' ? 'active' : '' }}">Դետալներ</a>
+            <a href="{{ route('general-data', 'snapshots') }}" class="nav-tab {{ $tab === 'snapshots' ? 'active' : '' }}">Snapshots</a>
         </div>
 
         <div class="data-view-container">
@@ -137,6 +138,8 @@
                 @include('general_data.namings')
             @elseif($tab === 'parts')
                 @include('general_data.parts')
+            @elseif($tab === 'snapshots')
+                @include('general_data.snapshots')
             @endif
         </div>
     </div>

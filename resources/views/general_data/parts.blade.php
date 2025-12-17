@@ -1,5 +1,5 @@
 <div class="section-header">Դետալներ (Parts)</div>
-<div style="margin-bottom: 10px; display: flex; gap: 10px;">
+<div style="margin-bottom: 10px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between">
     <a href="{{ route('parts.export') }}" class="btn btn-sm btn-success">
         <i class="fa-solid fa-file-excel"></i> Export to Excel
     </a>
@@ -10,6 +10,13 @@
             <i class="fa-solid fa-file-import"></i> Import Excel
         </button>
     </form>
+
+    <div style="display: inline-flex; gap: 5px; align-items: center;">
+        <input type="date" id="snapshot-date" class="form-control" value="{{ date('Y-m-d') }}" style="width: auto;">
+        <button onclick="createSnapshot()" class="btn btn-m btn-info">
+            <i class="fa-solid fa-camera"></i> Create Snapshot
+        </button>
+    </div>
 </div>
 <div class="data-table-wrapper">
     <table class="ms-table">
@@ -18,7 +25,8 @@
                 <th>Կոդ</th>
                 <th>Անվանում</th>
                 <th>Գին</th>
-                <th>Քանակ</th>
+                <th>Մնացորդ</th>
+                <th>Ծախսած</th>
                 <th>Չ/Մ</th>
                 <th></th>
             </tr>
@@ -31,6 +39,7 @@
                         <td class="editable" data-field="name">{{ $part->name }}</td>
                         <td class="editable" data-field="unit_price">{{ $part->unit_price }}</td>
                         <td data-field="quantity">{{ $part->quantity?? 0 }}</td>
+                        <td>{{ $part->used_quantity ?? 0 }}</td>
                         <td class="editable" data-field="measure_unit">{{ $part->measure_unit }}</td>
                         <td>
                             <button onclick="editOrderPart({{ $part->id }}, event)" class="text-blue-600 hover:underline edit-btn">Edit</button>
@@ -57,9 +66,7 @@
                     <td>
                         <input type="number" step="0.01" name="unit_price" placeholder="Price" class="border p-1 w-full" required>
                     </td>
-                    <td>
-                        <input type="number" name="quantity" placeholder="Quantity" class="border p-1 w-full">
-                    </td>
+                    <td>0</td>
                     <td>
                         <input type="text" name="measure_unit" placeholder="Measure Unit" class="border p-1 w-full" value="հատ" required>
                     </td>
@@ -177,7 +184,43 @@
         row.querySelector('.save-btn').style.display = 'none';
         row.querySelector('.cancel-btn').style.display = 'none';
     }
-    @endif
 
+    // Snapshot functionality
+    function createSnapshot() {
+        const date = document.getElementById('snapshot-date').value;
+        if (!date) {
+            alert('Please select a date');
+            return;
+        }
+
+        const password = prompt('Enter password:');
+        if (password !== '1234') {
+            alert('Incorrect password');
+            return;
+        }
+
+        if (confirm('This will reset all parts quantities to 0. Continue?')) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route("parts.create-snapshot") }}';
+
+            const csrf = document.createElement('input');
+            csrf.type = 'hidden';
+            csrf.name = '_token';
+            csrf.value = '{{ csrf_token() }}';
+            form.appendChild(csrf);
+
+            const dateInput = document.createElement('input');
+            dateInput.type = 'hidden';
+            dateInput.name = 'snapshot_date';
+            dateInput.value = date;
+            form.appendChild(dateInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+    @endif
 
 </script>

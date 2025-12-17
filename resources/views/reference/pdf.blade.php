@@ -63,6 +63,7 @@
     <div class="header">
         <div class="title">ՏԵՂԵԿԱՆՔ</div>
         <div class="title">«ՄՏԿ» ՓԲԸ-ում գազի ազդանշանային սարքերի նորոգման վերաբերյալ</div>
+        <div class="title"><span>{{ $armenianMonths[\Carbon\Carbon::parse($endDate)->format('F')] . ' '. \Carbon\Carbon::parse($endDate)->format('Y') . 'թ.' }}</span></div>
     </div>
 
     <div class="date">
