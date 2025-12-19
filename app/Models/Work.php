@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Work extends Model
 {
@@ -51,5 +52,10 @@ class Work extends Model
     public function equipmentPartGroup(): BelongsTo
     {
         return $this->belongsTo(EquipmentPartGroup::class);
+    }
+
+    public function acts(): BelongsToMany
+    {
+        return $this->belongsToMany(Act::class, 'act_works');
     }
 }

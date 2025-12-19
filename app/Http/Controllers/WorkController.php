@@ -173,6 +173,16 @@ class WorkController extends Controller
             }
         }
 
+        // If changing from archived to active, reset work_order_status to 0
+        if ($work->status == 1 && isset($validated['status']) && $validated['status'] == 0) {
+            $validated['work_order_status'] = 0;
+        }
+
+        // If work_order_status is being set to 0, remove from all acts
+        if (isset($validated['work_order_status']) && $validated['work_order_status'] == 0) {
+            $work->acts()->detach();
+        }
+
         $work->update($validated);
 
         $table = $request->input('original_table', $work->status == 1 ? 'archived' : 'active');

@@ -10,16 +10,16 @@
         <form id="reference-form" method="GET" action="{{ route('reference.index') }}" style="display: flex; gap: 10px; align-items: end;">
             <div>
                 <label>Սկսման ամսաթիվ:</label>
-                <input type="date" name="start_date" id="start_date" class="form-control border p-2" value="{{ $startDate }}" required>
+                <input type="date" name="start_date" id="start_date" class="form-control border p-2" style="max-width: 165px" value="{{ $startDate }}" required>
             </div>
             <div>
                 <label>Ավարտի ամսաթիվ:</label>
-                <input type="date" name="end_date" id="end_date" class="form-control border p-2" value="{{ $endDate }}" required>
+                <input type="date" name="end_date" id="end_date" class="form-control border p-2" style="max-width: 165px" value="{{ $endDate }}" required>
             </div>
             <button type="submit" class="btn btn-sm btn-primary">Ցույց տալ</button>
             <div style="margin-left: auto;">
-                <a href="{{ route('reference.trilateral', ['start_date' => $startDate, 'end_date' => $endDate]) }}" class="btn btn-sm btn-info" style="margin-right: 10px" target="_blank">ՍՉԱՄ Եռակողմ</a>
-                <a href="{{ route('reference.export-products-by-regions', ['start_date' => $startDate, 'end_date' => $endDate]) }}" class="btn btn-sm btn-secondary" target="_blank">Դետալների ծախս ընդհանուր</a>
+                <a href="{{ route('reference.trilateral', ['start_date' => $startDate, 'end_date' => $endDate]) }}" class="btn btn-sm btn-info" style="margin-right: 5px" target="_blank">ՍՉԱՄ Եռակողմ</a>
+                <a href="{{ route('reference.export-products-by-regions', ['start_date' => $startDate, 'end_date' => $endDate]) }}" class="btn btn-sm btn-secondary" target="_blank">Դետալների ծախս</a>
             </div>
         </form>
     </div>
