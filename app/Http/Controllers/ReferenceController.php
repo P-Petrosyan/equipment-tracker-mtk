@@ -137,4 +137,12 @@ class ReferenceController extends Controller
 
         return Excel::download(new \App\Exports\PartsUsedExport($partnerIds, $startDate, $endDate), $partner->region . ' ' . now()->format('d-m-y') . '.xlsx');
     }
+
+    public function exportProductsByRegions(Request $request)
+    {
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+
+        return Excel::download(new \App\Exports\ProductsByRegionsExport($startDate, $endDate), 'Դետալների ծախս ընդհանուր ' . now()->format('d-m-y') . '.xlsx');
+    }
 }

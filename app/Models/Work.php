@@ -21,8 +21,8 @@ class Work extends Model
         'non_repairable',
         'conclusion_number',
         'defects_description',
-        'status',
-        'work_order_status'
+        'status', //  $work->status == 1 ? 'archived' : 'active'
+        'work_order_status' // Կատարողական: 0 -> Չկա կատարողական : 1 -> Կատարողականով
     ];
 
     protected $casts = [

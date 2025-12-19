@@ -143,3 +143,4 @@ Route::get('/reference/print', [ReferenceController::class, 'print'])->name('ref
 Route::get('/reference/trilateral', [ReferenceController::class, 'trilateral'])->name('reference.trilateral');
 Route::get('/reference/partners-by-period', [ReferenceController::class, 'getPartnersByPeriod'])->name('reference.partners-by-period');
 Route::get('/reference/export-parts-used', [ReferenceController::class, 'exportPartsUsed'])->name('reference.export-parts-used');
+Route::get('/reference/export-products-by-regions', [ReferenceController::class, 'exportProductsByRegions'])->name('reference.export-products-by-regions');

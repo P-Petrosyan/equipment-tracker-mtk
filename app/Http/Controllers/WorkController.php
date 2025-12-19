@@ -175,7 +175,7 @@ class WorkController extends Controller
 
         $work->update($validated);
 
-        $table = $work->status == 1 ? 'archived' : 'active';
+        $table = $request->input('original_table', $work->status == 1 ? 'archived' : 'active');
         return redirect()->route('works.index', ['table' => $table])->with('success', 'Work updated successfully.');
     }
 

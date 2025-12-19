@@ -31,6 +31,7 @@
     <form action="{{ route('works.update', $work) }}" method="POST">
         @csrf
         @method('PATCH')
+        <input type="hidden" name="original_table" value="{{ $work->status == 1 ? 'archived' : 'active' }}">
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 800px;">
             <div>
