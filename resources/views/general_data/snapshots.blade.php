@@ -4,17 +4,21 @@
         <option value="">Ընտրել ամսաթիվը</option>
         @if(isset($data['snapshots']))
             @foreach($data['snapshots'] as $snapshot)
-                <option value="{{ $snapshot->snapshot_date }}">{{ $snapshot->snapshot_date->format('d-m-Y') }}</option>
+                <option value="{{ $snapshot->snapshot_date }}">{{ $snapshot->snapshot_date->format('d-m-Y') }} {{ $snapshot->snapshot_comment ?? '' }}</option>
             @endforeach
         @endif
     </select>
     <button onclick="viewSelectedSnapshot()" class="btn btn-m btn-primary">
         <i class="fa-solid fa-eye"></i> Ընտրել
     </button>
+    <button onclick="exportSelectedSnapshot()" class="btn btn-m btn-success" id="export-btn" style="display: none;">
+        <i class="fa-solid fa-file-excel"></i> Export to Excel
+    </button>
 </div>
 
 <div id="snapshot-table" style="display: none;">
     <div class="data-table-wrapper">
+        <p id="snapshot_comment" class="mt-1 mb-1"></p>
         <table class="ms-table">
             <thead>
                 <tr>
@@ -47,7 +51,9 @@ function viewSelectedSnapshot() {
     .then(data => {
         const tbody = document.getElementById('snapshot-tbody');
         tbody.innerHTML = '';
-
+        console.log(data.snapshot_comment);
+        const comment = document.getElementById('snapshot_comment');
+        comment.innerHTML = data.snapshot_comment;
         data.parts_data.forEach(part => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -62,10 +68,23 @@ function viewSelectedSnapshot() {
         });
 
         document.getElementById('snapshot-table').style.display = 'block';
+        document.getElementById('export-btn').style.display = 'inline-block';
     })
     .catch(error => {
         console.error('Error:', error);
         alert('Error loading snapshot data');
     });
+}
+
+function exportSelectedSnapshot() {
+    const selector = document.getElementById('snapshot-selector');
+    const selectedDate = selector.value;
+
+    if (!selectedDate) {
+        alert('Please select a snapshot date');
+        return;
+    }
+
+    window.location.href = `{{ url('/parts/snapshot-export') }}/${selectedDate}`;
 }
 </script>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Part;
 use App\Models\PartsSnapshot;
 use App\Exports\PartsExport;
+use App\Exports\SnapshotExport;
 use App\Imports\PartsImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -110,13 +111,15 @@ class PartController extends Controller
     public function createSnapshot(Request $request)
     {
         $request->validate([
-            'snapshot_date' => 'required|date|unique:parts_snapshots,snapshot_date'
+            'snapshot_date' => 'required|date|unique:parts_snapshots,snapshot_date',
+            'snapshot_comment' => 'nullable|string|max:1000'
         ]);
 
         $partsData = Part::all()->toArray();
-        
+
         PartsSnapshot::create([
             'snapshot_date' => $request->snapshot_date,
+            'snapshot_comment' => $request->snapshot_comment,
             'parts_data' => $partsData
         ]);
 
@@ -154,5 +157,16 @@ class PartController extends Controller
         }
 
         return response()->json($snapshot);
+    }
+
+    public function exportSnapshot($date)
+    {
+        $snapshot = PartsSnapshot::where('snapshot_date', $date)->first();
+        if (!$snapshot) {
+            return redirect()->back()->with('error', 'Snapshot not found.');
+        }
+
+        $filename = 'snapshot_' . $date . '.xlsx';
+        return Excel::download(new SnapshotExport($snapshot->parts_data, $snapshot->snapshot_date, $snapshot->snapshot_comment), $filename);
     }
 }

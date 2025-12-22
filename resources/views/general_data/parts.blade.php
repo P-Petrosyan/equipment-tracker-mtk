@@ -12,6 +12,7 @@
     </form>
 
     <div style="display: inline-flex; gap: 5px; align-items: center;">
+        <input type="text" name="snapshot_comment" class="form-control" placeholder="Snapshot comment (optional)">
         <input type="date" id="snapshot-date" class="form-control" value="{{ date('Y-m-d') }}" style="width: auto;">
         <button onclick="createSnapshot()" class="btn btn-m btn-info">
             <i class="fa-solid fa-camera"></i> Create Snapshot
@@ -188,6 +189,8 @@
     // Snapshot functionality
     function createSnapshot() {
         const date = document.getElementById('snapshot-date').value;
+        const comment = document.querySelector('input[name="snapshot_comment"]').value;
+
         if (!date) {
             alert('Please select a date');
             return;
@@ -215,6 +218,12 @@
             dateInput.name = 'snapshot_date';
             dateInput.value = date;
             form.appendChild(dateInput);
+
+            const commentInput = document.createElement('input');
+            commentInput.type = 'hidden';
+            commentInput.name = 'snapshot_comment';
+            commentInput.value = comment;
+            form.appendChild(commentInput);
 
             document.body.appendChild(form);
             form.submit();

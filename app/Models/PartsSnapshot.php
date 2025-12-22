@@ -8,6 +8,7 @@ class PartsSnapshot extends Model
 {
     protected $fillable = [
         'snapshot_date',
+        'snapshot_comment',
         'parts_data'
     ];
 

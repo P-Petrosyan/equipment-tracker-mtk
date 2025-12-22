@@ -56,6 +56,7 @@ class WorkController extends Controller
 
     public function edit(Work $work)
     {
+        $work->load('acts.partner');
         $partners = Partner::with('structures')->get();
         $equipment = Equipment::with('partGroups')->get();
         $defects = Defect::all();
@@ -173,8 +174,18 @@ class WorkController extends Controller
             }
         }
 
-        // If changing from archived to active, reset work_order_status to 0
+        // Check if trying to change from archived to active when work has acts
         if ($work->status == 1 && isset($validated['status']) && $validated['status'] == 0) {
+            if ($work->work_order_status == 1 && $work->acts()->exists()) {
+                $acts = $work->acts()->with('partner')->get();
+                $actsList = $acts->map(function($act) {
+                    return "Ակտ #{$act->act_number} ({$act->partner->region}) - {$act->act_date->format('d.m.Y')}";
+                })->implode(', ');
+
+                return back()->withErrors([
+                    'act_error' => "Այս աշխատանքը կապված է հետևյալ ակտ(եր)ի հետ: {$actsList}. Նախ հեռացրեք աշխատանքը ակտից:"
+                ])->withInput();
+            }
             $validated['work_order_status'] = 0;
         }
 

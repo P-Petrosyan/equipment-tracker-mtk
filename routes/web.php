@@ -105,6 +105,7 @@ Route::post('/parts/create-snapshot', [PartController::class, 'createSnapshot'])
 Route::get('/parts/snapshots', [PartController::class, 'getSnapshots'])->name('parts.snapshots');
 Route::get('/parts/snapshot/{date}', [PartController::class, 'viewSnapshot'])->name('parts.view-snapshot');
 Route::get('/parts/snapshot-data/{date}', [PartController::class, 'getSnapshotData'])->name('parts.snapshot-data');
+Route::get('/parts/snapshot-export/{date}', [PartController::class, 'exportSnapshot'])->name('parts.snapshot-export');
 
 Route::post('/equipment-part-groups', [EquipmentPartGroupController::class, 'store'])->name('equipment-part-groups.store');
 Route::patch('/equipment-part-groups/{equipmentPartGroup}', [EquipmentPartGroupController::class, 'update'])->name('equipment-part-groups.update');
