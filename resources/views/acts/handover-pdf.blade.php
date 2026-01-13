@@ -9,7 +9,7 @@
         .date { text-align: right; margin: 20px 0; }
         .content { margin: 20px 0; text-align: justify; line-height: 1.8; }
         table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        th, td { border: 1px solid black; padding: 8px; text-align: left; }
+        th, td { border: 1px solid black; padding: 2px; text-align: left; }
         th { background-color: #f0f0f0; font-weight: bold; }
         .signature-section { margin-top: 20px; }
         .signature-line { border-bottom: 1px solid black; display: inline-block; width: 200px; margin: 0 10px; }
