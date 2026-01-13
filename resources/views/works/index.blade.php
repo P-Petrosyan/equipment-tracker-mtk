@@ -29,8 +29,11 @@
     <div class="header">
         <h1 class="page-title" style="font-size: 1.2rem;">Աշխատանքներ (Works)</h1>
         <div style="display: flex; gap: 10px; align-items: center;">
-            <button onclick="showTable('active')" id="active-btn" class="btn btn-m btn-primary">Ընթացիկ</button>
-            <button onclick="showTable('archived')" id="archived-btn" class="btn btn-m btn-secondary">Արխիվ</button>
+{{--            <button onclick="showTable('active')" id="active-btn" class="btn btn-m btn-primary">Ընթացիկ</button>--}}
+            <a href="{{ route('works.index', ['table' => 'active']) }}" onclick="showTable('active')" id="active-btn" class="btn btn-m btn-primary">Ընթացիկ</a>
+
+{{--            <button onclick="showTable('archived')" id="archived-btn" class="btn btn-m btn-secondary">Արխիվ</button>--}}
+            <a href="{{ route('works.index', ['table' => 'archived']) }}" onclick="showTable('archived')" id="archived-btn" class="btn btn-m btn-secondary">Արխիվ</a>
 
         </div>
         <a href="{{ route('dashboard') }}" class="btn btn-m btn-secondary">
@@ -148,6 +151,7 @@
         <table class="ms-table">
             <thead>
             <tr>
+                <td></td>
                 <td></td>
                 <form method="GET" style="display: flex; gap: 5px;">
                     <input type="hidden" name="table" value="archived">
