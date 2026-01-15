@@ -75,7 +75,7 @@ class ActController extends Controller
         $assignedWorks = [];
         $pagination = null;
         if ($actId) {
-            $perPage = 5;
+            $perPage = 15;
             $assignedWorksQuery = Act::find($actId)->works()->with(['equipment', 'equipmentPartGroup'])->orderByPivot('id', 'desc');
 
             // Apply search filter if provided
