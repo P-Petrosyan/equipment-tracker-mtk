@@ -58,6 +58,7 @@ class ActController extends Controller
         $actDate = $request->get('act_date');
         $actId = $request->get('act_id');
         $page = $request->get('page', 1);
+        $search = $request->get('search', '');
 
         if (!$partnerId || !$actDate) {
             return response()->json([]);
@@ -74,8 +75,14 @@ class ActController extends Controller
         $assignedWorks = [];
         $pagination = null;
         if ($actId) {
-            $perPage = 15;
+            $perPage = 5;
             $assignedWorksQuery = Act::find($actId)->works()->with(['equipment', 'equipmentPartGroup'])->orderByPivot('id', 'desc');
+
+            // Apply search filter if provided
+            if (!empty($search)) {
+                $assignedWorksQuery->where('new_serial_number', 'like', '%' . $search . '%');
+            }
+
             $total = $assignedWorksQuery->count();
             $assignedWorks = $assignedWorksQuery->skip(($page - 1) * $perPage)->take($perPage)->get();
 

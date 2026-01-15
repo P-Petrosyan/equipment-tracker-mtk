@@ -66,9 +66,10 @@
             <thead>
                 <tr>
                     <th>Սարք</th>
-                    <th>
-                        <input type="text" id="new-serial-search" placeholder="Նոր համար" style="padding: 5px; width: 100%;">
-                    </th>
+{{--                    <th>--}}
+{{--                        <input type="text" id="new-serial-search" placeholder="Նոր համար" style="padding: 5px; width: 100%;">--}}
+{{--                    </th>--}}
+                    <th>Նոր համար</th>
                     <th>Կարգի գումար</th>
                     <th>Կարգ</th>
                     <th>Ստացման ամսաթիվ</th>
@@ -127,20 +128,24 @@
 let selectedActId = null;
 let currentPage = 1;
 let selectedActData = null;
+let assignedSearchTerm = '';
 
 // Add search functionality for new serial number
 document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('new-serial-search');
-    if (searchInput) {
-        searchInput.addEventListener('input', function() {
-            filterArchivedWorks(this.value);
-        });
-    }
-    
+    // const searchInput = document.getElementById('new-serial-search');
+    // if (searchInput) {
+    //     searchInput.addEventListener('input', function() {
+    //         filterArchivedWorks(this.value);
+    //     });
+    // }
+
     const assignedSearchInput = document.getElementById('assigned-new-serial-search');
     if (assignedSearchInput) {
         assignedSearchInput.addEventListener('input', function() {
-            filterAssignedWorks(this.value);
+            assignedSearchTerm = this.value;
+            if (selectedActData) {
+                loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, 1, assignedSearchTerm);
+            }
         });
     }
 });
@@ -148,32 +153,13 @@ document.addEventListener('DOMContentLoaded', function() {
 function filterArchivedWorks(searchTerm) {
     const tbody = document.getElementById('archived-works-body');
     const rows = tbody.getElementsByTagName('tr');
-    
-    for (let row of rows) {
-        const cells = row.getElementsByTagName('td');
-        if (cells.length > 1) {
-            const newSerialCell = cells[1]; // Second column is "Նոր համար"
-            const newSerial = newSerialCell.textContent || newSerialCell.innerText;
-            
-            if (newSerial.toLowerCase().includes(searchTerm.toLowerCase())) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        }
-    }
-}
 
-function filterAssignedWorks(searchTerm) {
-    const tbody = document.getElementById('assigned-works-body');
-    const rows = tbody.getElementsByTagName('tr');
-    
     for (let row of rows) {
         const cells = row.getElementsByTagName('td');
         if (cells.length > 1) {
             const newSerialCell = cells[1]; // Second column is "Նոր համար"
             const newSerial = newSerialCell.textContent || newSerialCell.innerText;
-            
+
             if (newSerial.toLowerCase().includes(searchTerm.toLowerCase())) {
                 row.style.display = '';
             } else {
@@ -186,14 +172,15 @@ function filterAssignedWorks(searchTerm) {
 function selectAct(actId, partnerId, actDate, row) {
     selectedActId = actId;
     currentPage = 1;
+    assignedSearchTerm = '';
     selectedActData = { actId, partnerId, actDate, row };
 
     // Clear search inputs
-    const searchInput = document.getElementById('new-serial-search');
-    if (searchInput) {
-        searchInput.value = '';
-    }
-    
+    // const searchInput = document.getElementById('new-serial-search');
+    // if (searchInput) {
+    //     searchInput.value = '';
+    // }
+
     const assignedSearchInput = document.getElementById('assigned-new-serial-search');
     if (assignedSearchInput) {
         assignedSearchInput.value = '';
@@ -207,12 +194,12 @@ function selectAct(actId, partnerId, actDate, row) {
     document.querySelectorAll('#acts-table tr').forEach(r => r.classList.remove('selected'));
     row.classList.add('selected');
 
-    loadActWorks(actId, partnerId, actDate, 1);
+    loadActWorks(actId, partnerId, actDate, 1, '');
 }
 
-function loadActWorks(actId, partnerId, actDate, page) {
+function loadActWorks(actId, partnerId, actDate, page, search = '') {
     // Fetch archived works and assigned works
-    fetch(`/acts/archived-works?partner_id=${partnerId}&act_date=${actDate}&act_id=${actId}&page=${page}`)
+    fetch(`/acts/archived-works?partner_id=${partnerId}&act_date=${actDate}&act_id=${actId}&page=${page}&search=${encodeURIComponent(search)}`)
         .then(response => response.json())
         .then(data => {
             // Update archived works table
@@ -259,7 +246,7 @@ function loadActWorks(actId, partnerId, actDate, page) {
                     `;
                     assignedTbody.appendChild(tr);
                 });
-                
+
                 // Update pagination
                 if (data.pagination) {
                     updatePagination(data.pagination);
@@ -277,20 +264,20 @@ function loadActWorks(actId, partnerId, actDate, page) {
 
 function updatePagination(pagination) {
     const paginationDiv = document.getElementById('assigned-pagination');
-    
+
     if (pagination.last_page <= 1) {
         paginationDiv.style.display = 'none';
         return;
     }
-    
+
     paginationDiv.style.display = 'block';
     let html = '<div style="display: flex; gap: 5px; justify-content: center; align-items: center;">';
-    
+
     // Previous button
     if (pagination.current_page > 1) {
         html += `<button onclick="changePage(${pagination.current_page - 1})" class="btn btn-sm btn-secondary">Նախորդ</button>`;
     }
-    
+
     // Page numbers
     for (let i = 1; i <= pagination.last_page; i++) {
         if (i === pagination.current_page) {
@@ -299,13 +286,13 @@ function updatePagination(pagination) {
             html += `<button onclick="changePage(${i})" class="btn btn-sm btn-secondary">${i}</button>`;
         }
     }
-    
+
     // Next button
     if (pagination.current_page < pagination.last_page) {
         html += `<button onclick="changePage(${pagination.current_page + 1})" class="btn btn-sm btn-secondary">Հաջորդ</button>`;
     }
-    html += `${pagination.total}`
-    
+    html += `<span class="btn btn-sm">${pagination.total}</span>`
+
     html += '</div>';
     paginationDiv.innerHTML = html;
 }
@@ -313,7 +300,7 @@ function updatePagination(pagination) {
 function changePage(page) {
     currentPage = page;
     if (selectedActData) {
-        loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, page);
+        loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, page, assignedSearchTerm);
     }
 }
 
@@ -333,7 +320,7 @@ function assignWork(workId) {
     .then(data => {
         // Refresh the tables
         if (selectedActData) {
-            loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, currentPage);
+            loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, currentPage, assignedSearchTerm);
         }
     });
 }
@@ -354,7 +341,7 @@ function removeWork(workId) {
     .then(data => {
         // Refresh the tables
         if (selectedActData) {
-            loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, currentPage);
+            loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, currentPage, assignedSearchTerm);
         }
     });
 }
@@ -425,7 +412,7 @@ function updateExitDates() {
     .then(response => response.json())
     .then(data => {
         if (selectedActData) {
-            loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, currentPage);
+            loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, currentPage, assignedSearchTerm);
         }
     });
 }
