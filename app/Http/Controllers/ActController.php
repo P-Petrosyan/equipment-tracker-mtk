@@ -57,6 +57,7 @@ class ActController extends Controller
         $partnerId = $request->get('partner_id');
         $actDate = $request->get('act_date');
         $actId = $request->get('act_id');
+        $page = $request->get('page', 1);
 
         if (!$partnerId || !$actDate) {
             return response()->json([]);
@@ -69,15 +70,26 @@ class ActController extends Controller
             ->whereDate('receive_date', '<=', $actDate)
             ->get();
 
-        // Get assigned works for this act
+        // Get assigned works for this act with pagination
         $assignedWorks = [];
+        $pagination = null;
         if ($actId) {
-            $assignedWorks = Act::find($actId)->works()->with(['equipment', 'equipmentPartGroup'])->get();
-        }
+            $perPage = 15;
+            $assignedWorksQuery = Act::find($actId)->works()->with(['equipment', 'equipmentPartGroup'])->orderByPivot('id', 'desc');
+            $total = $assignedWorksQuery->count();
+            $assignedWorks = $assignedWorksQuery->skip(($page - 1) * $perPage)->take($perPage)->get();
 
+            $pagination = [
+                'current_page' => (int)$page,
+                'per_page' => $perPage,
+                'total' => $total,
+                'last_page' => ceil($total / $perPage)
+            ];
+        }
         return response()->json([
             'archived_works' => $works,
-            'assigned_works' => $assignedWorks
+            'assigned_works' => $assignedWorks,
+            'pagination' => $pagination
         ]);
     }
 

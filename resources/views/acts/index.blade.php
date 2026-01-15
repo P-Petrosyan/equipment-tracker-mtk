@@ -66,7 +66,9 @@
             <thead>
                 <tr>
                     <th>Սարք</th>
-                    <th>Նոր համար</th>
+                    <th>
+                        <input type="text" id="new-serial-search" placeholder="Նոր համար" style="padding: 5px; width: 100%;">
+                    </th>
                     <th>Կարգի գումար</th>
                     <th>Կարգ</th>
                     <th>Ստացման ամսաթիվ</th>
@@ -98,7 +100,9 @@
             <thead>
                 <tr>
                     <th>Սարք</th>
-                    <th>Նոր համար</th>
+                    <th>
+                        <input type="text" id="assigned-new-serial-search" placeholder="Նոր համար" style="padding: 5px; width: 100%;">
+                    </th>
                     <th>Կարգի գումար</th>
                     <th>Կարգ</th>
                     <th>Չվերանորոգվող</th>
@@ -109,18 +113,91 @@
             </thead>
             <tbody id="assigned-works-body">
                 <tr>
-                    <td colspan="7" class="text-center text-muted">Ընտրեք ակտ՝ նշանակված աշխատանքները դիտելու համար</td>
+                    <td colspan="8" class="text-center text-muted">Ընտրեք ակտ՝ նշանակված աշխատանքները դիտելու համար</td>
                 </tr>
             </tbody>
         </table>
+        <div id="assigned-pagination" style="display: none; margin-top: 10px; text-align: center;">
+            <!-- Pagination will be inserted here -->
+        </div>
     </div>
 </div>
 
 <script>
 let selectedActId = null;
+let currentPage = 1;
+let selectedActData = null;
+
+// Add search functionality for new serial number
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('new-serial-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            filterArchivedWorks(this.value);
+        });
+    }
+    
+    const assignedSearchInput = document.getElementById('assigned-new-serial-search');
+    if (assignedSearchInput) {
+        assignedSearchInput.addEventListener('input', function() {
+            filterAssignedWorks(this.value);
+        });
+    }
+});
+
+function filterArchivedWorks(searchTerm) {
+    const tbody = document.getElementById('archived-works-body');
+    const rows = tbody.getElementsByTagName('tr');
+    
+    for (let row of rows) {
+        const cells = row.getElementsByTagName('td');
+        if (cells.length > 1) {
+            const newSerialCell = cells[1]; // Second column is "Նոր համար"
+            const newSerial = newSerialCell.textContent || newSerialCell.innerText;
+            
+            if (newSerial.toLowerCase().includes(searchTerm.toLowerCase())) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+    }
+}
+
+function filterAssignedWorks(searchTerm) {
+    const tbody = document.getElementById('assigned-works-body');
+    const rows = tbody.getElementsByTagName('tr');
+    
+    for (let row of rows) {
+        const cells = row.getElementsByTagName('td');
+        if (cells.length > 1) {
+            const newSerialCell = cells[1]; // Second column is "Նոր համար"
+            const newSerial = newSerialCell.textContent || newSerialCell.innerText;
+            
+            if (newSerial.toLowerCase().includes(searchTerm.toLowerCase())) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+    }
+}
 
 function selectAct(actId, partnerId, actDate, row) {
     selectedActId = actId;
+    currentPage = 1;
+    selectedActData = { actId, partnerId, actDate, row };
+
+    // Clear search inputs
+    const searchInput = document.getElementById('new-serial-search');
+    if (searchInput) {
+        searchInput.value = '';
+    }
+    
+    const assignedSearchInput = document.getElementById('assigned-new-serial-search');
+    if (assignedSearchInput) {
+        assignedSearchInput.value = '';
+    }
 
     // Show print button and handover button
     document.getElementById('print-act-btn').style.display = 'inline-block';
@@ -130,8 +207,12 @@ function selectAct(actId, partnerId, actDate, row) {
     document.querySelectorAll('#acts-table tr').forEach(r => r.classList.remove('selected'));
     row.classList.add('selected');
 
+    loadActWorks(actId, partnerId, actDate, 1);
+}
+
+function loadActWorks(actId, partnerId, actDate, page) {
     // Fetch archived works and assigned works
-    fetch(`/acts/archived-works?partner_id=${partnerId}&act_date=${actDate}&act_id=${actId}`)
+    fetch(`/acts/archived-works?partner_id=${partnerId}&act_date=${actDate}&act_id=${actId}&page=${page}`)
         .then(response => response.json())
         .then(data => {
             // Update archived works table
@@ -178,14 +259,62 @@ function selectAct(actId, partnerId, actDate, row) {
                     `;
                     assignedTbody.appendChild(tr);
                 });
+                
+                // Update pagination
+                if (data.pagination) {
+                    updatePagination(data.pagination);
+                }
             } else {
                 document.getElementById('remove-all-btn').style.display = 'none';
-                assignedTbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Նշանակված աշխատանքներ չկան</td></tr>';
+                document.getElementById('assigned-pagination').style.display = 'none';
+                assignedTbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">Նշանակված աշխատանքներ չկան</td></tr>';
             }
         })
         .catch(error => {
             console.error('Error:', error);
         });
+}
+
+function updatePagination(pagination) {
+    const paginationDiv = document.getElementById('assigned-pagination');
+    
+    if (pagination.last_page <= 1) {
+        paginationDiv.style.display = 'none';
+        return;
+    }
+    
+    paginationDiv.style.display = 'block';
+    let html = '<div style="display: flex; gap: 5px; justify-content: center; align-items: center;">';
+    
+    // Previous button
+    if (pagination.current_page > 1) {
+        html += `<button onclick="changePage(${pagination.current_page - 1})" class="btn btn-sm btn-secondary">Նախորդ</button>`;
+    }
+    
+    // Page numbers
+    for (let i = 1; i <= pagination.last_page; i++) {
+        if (i === pagination.current_page) {
+            html += `<button class="btn btn-sm btn-primary" disabled>${i}</button>`;
+        } else {
+            html += `<button onclick="changePage(${i})" class="btn btn-sm btn-secondary">${i}</button>`;
+        }
+    }
+    
+    // Next button
+    if (pagination.current_page < pagination.last_page) {
+        html += `<button onclick="changePage(${pagination.current_page + 1})" class="btn btn-sm btn-secondary">Հաջորդ</button>`;
+    }
+    html += `${pagination.total}`
+    
+    html += '</div>';
+    paginationDiv.innerHTML = html;
+}
+
+function changePage(page) {
+    currentPage = page;
+    if (selectedActData) {
+        loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, page);
+    }
 }
 
 function assignWork(workId) {
@@ -203,7 +332,9 @@ function assignWork(workId) {
     .then(response => response.json())
     .then(data => {
         // Refresh the tables
-        document.querySelector('#acts-table .selected').click();
+        if (selectedActData) {
+            loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, currentPage);
+        }
     });
 }
 
@@ -222,7 +353,9 @@ function removeWork(workId) {
     .then(response => response.json())
     .then(data => {
         // Refresh the tables
-        document.querySelector('#acts-table .selected').click();
+        if (selectedActData) {
+            loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, currentPage);
+        }
     });
 }
 
@@ -239,7 +372,9 @@ function addAllWorks() {
     })
     .then(response => response.json())
     .then(data => {
-        document.querySelector('#acts-table .selected').click();
+        if (selectedActData) {
+            loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, 1);
+        }
     });
 }
 
@@ -256,7 +391,9 @@ function removeAllWorks() {
     })
     .then(response => response.json())
     .then(data => {
-        document.querySelector('#acts-table .selected').click();
+        if (selectedActData) {
+            loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, 1);
+        }
     });
 }
 
@@ -287,7 +424,9 @@ function updateExitDates() {
     })
     .then(response => response.json())
     .then(data => {
-        document.querySelector('#acts-table .selected').click();
+        if (selectedActData) {
+            loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, currentPage);
+        }
     });
 }
 
