@@ -95,7 +95,13 @@
                 <button onclick="updateExitDates()" class="btn btn-sm btn-warning">Թարմացնել ելքի ամսաթվերը</button>
                 <button onclick="generateHandoverPdf()" class="btn btn-sm btn-secondary" id="handover-pdf-btn" style="display: none;">Հանձնման ընդունման ակտ</button>
             </div>
-            <button onclick="removeAllWorks()" class="btn btn-sm btn-danger" id="remove-all-btn" style="display: none;">Remove All</button>
+            <button onclick="confirmRemoveAllWorks()"
+                    class="btn btn-sm btn-danger"
+                    id="remove-all-btn"
+                    style="display: none;">
+                Remove All
+            </button>
+{{--            <button onclick="removeAllWorks()" class="btn btn-sm btn-danger" id="remove-all-btn" style="display: none;">Remove All</button>--}}
         </div>
         <table class="ms-table">
             <thead>
@@ -363,6 +369,16 @@ function addAllWorks() {
             loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, 1);
         }
     });
+}
+
+function confirmRemoveAllWorks() {
+    const confirmed = confirm(
+        'Դուք պատրաստվում էք հեռացնել բոլոր աշխատանքները։\n Հեռացնե՞լ բոլոր աշխատանքները'
+    );
+
+    if (confirmed) {
+        removeAllWorks();
+    }
 }
 
 function removeAllWorks() {
