@@ -27,7 +27,7 @@
             @endforeach
         </div>
     @endif
-    
+
     <form action="{{ route('works.update', $work) }}" method="POST">
         @csrf
         @method('PATCH')
@@ -159,6 +159,10 @@
     const partnersData = @json($partners);
     const equipmentData = @json($equipment);
     const currentWork = @json($work);
+
+    document.querySelector('form').addEventListener('submit', function () {
+        this.querySelector('button[type=submit]').disabled = true;
+    });
 
     function updatePartnerStructures() {
         const partnerSelect = document.getElementById('partner-select');

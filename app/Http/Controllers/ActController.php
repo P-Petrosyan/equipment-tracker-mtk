@@ -102,14 +102,32 @@ class ActController extends Controller
 
     public function assignWork(Request $request)
     {
-        $actId = $request->act_id;
-        $workId = $request->work_id;
+        $request->validate([
+            'act_id'  => 'required|exists:acts,id',
+            'work_id' => 'required|exists:works,id',
+        ]);
 
-        $act = Act::find($actId);
-        $work = Work::find($workId);
+        $act  = Act::findOrFail($request->act_id);
+        $work = Work::findOrFail($request->work_id);
 
-        if (!$act->works()->where('work_id', $workId)->exists()) {
-            $act->works()->attach($workId);
+        // If work has a new serial number, check if it's already assigned
+        if (!empty($work->new_serial_number)) {
+
+            $alreadyAssigned = Work::where('new_serial_number', $work->new_serial_number)
+                ->whereHas('acts') // assumes Work has acts() relationship
+                ->exists();
+
+            if ($alreadyAssigned) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'A work with the same new serial number is already assigned.'
+                ], 422);
+            }
+        }
+
+        // Prevent duplicate attach to the same act
+        if (!$act->works()->where('work_id', $work->id)->exists()) {
+            $act->works()->attach($work->id);
             $work->update(['work_order_status' => 1]);
         }
 
@@ -132,8 +150,11 @@ class ActController extends Controller
 
     public function addAllWorks(Request $request)
     {
-        $actId = $request->act_id;
-        $act = Act::find($actId);
+        $request->validate([
+            'act_id' => 'required|exists:acts,id',
+        ]);
+
+        $act = Act::findOrFail($request->act_id);
 
         $works = Work::where('partner_id', $act->partner_id)
             ->where('status', 1)
@@ -141,11 +162,34 @@ class ActController extends Controller
             ->whereDate('receive_date', '<=', $act->act_date)
             ->get();
 
+        $conflicts = []; // To store works that cannot be assigned
+
         foreach ($works as $work) {
+            // Check if new_serial_number is already assigned to another act
+            if (!empty($work->new_serial_number)) {
+                $alreadyAssigned = Work::where('new_serial_number', $work->new_serial_number)
+                    ->whereHas('acts') // assumes Work has acts() relationship
+                    ->exists();
+
+                if ($alreadyAssigned) {
+                    $conflicts[] = $work->new_serial_number;
+                    continue; // skip assigning this work
+                }
+            }
+
+            // Skip if already attached to this act
             if (!$act->works()->where('work_id', $work->id)->exists()) {
                 $act->works()->attach($work->id);
                 $work->update(['work_order_status' => 1]);
             }
+        }
+
+        if (!empty($conflicts)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'The following works could not be assigned because the new serial number is already assigned: '
+                    . implode(', ', $conflicts)
+            ], 422);
         }
 
         return response()->json(['success' => true]);

@@ -152,6 +152,13 @@ body {
 }
 
 /* Buttons */
+button:disabled,
+button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 .btn {
     display: inline-flex;
     align-items: center;

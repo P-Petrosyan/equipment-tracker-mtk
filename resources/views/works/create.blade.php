@@ -18,7 +18,7 @@
             @endforeach
         </div>
     @endif
-    
+
     <form action="{{ route('works.store') }}" method="POST">
         @csrf
 
@@ -146,6 +146,10 @@
 <script>
     const partnersData = @json($partners);
     const equipmentData = @json($equipment);
+
+    document.querySelector('form').addEventListener('submit', function () {
+        this.querySelector('button[type=submit]').disabled = true;
+    });
 
     function updatePartnerStructures() {
         const partnerSelect = document.getElementById('partner-select');

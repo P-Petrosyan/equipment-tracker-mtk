@@ -5,7 +5,18 @@
 @section('content')
 <div class="container-fluid">
     <h2>Կատարողական ակտեր</h2>
-
+    <div id="assign-error"
+         style="
+            display: none;
+            background:#fee2e2;
+            color:#991b1b;
+            padding:10px 14px;
+            border-radius:6px;
+            margin-bottom:10px;
+            border:1px solid #fca5a5;"
+         role="alert"
+         aria-live="assertive">
+    </div>
     <div style="display: flex; flex-direction: row; gap: 20px;">
         <!-- Acts Table -->
         <div class="data-table-wrapper" style="flex: 1; height: 400px; overflow-y: auto;">
@@ -311,6 +322,10 @@ function changePage(page) {
 }
 
 function assignWork(workId) {
+    const errorBox = document.getElementById('assign-error');
+    errorBox.style.display = 'none';
+    errorBox.textContent = '';
+
     fetch('/acts/assign-work', {
         method: 'POST',
         headers: {
@@ -322,12 +337,24 @@ function assignWork(workId) {
             work_id: workId
         })
     })
-    .then(response => response.json())
+    .then(async response => {
+        const data = await response.json();
+
+        if (!response.ok || data.success === false) {
+            throw data;
+        }
+
+        return data;
+    })
     .then(data => {
         // Refresh the tables
         if (selectedActData) {
             loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, currentPage, assignedSearchTerm);
         }
+    })
+    .catch(error => {
+        errorBox.textContent = error.message ?? 'This work cannot be assigned.';
+        errorBox.style.display = 'block';
     });
 }
 
@@ -353,6 +380,10 @@ function removeWork(workId) {
 }
 
 function addAllWorks() {
+    const errorBox = document.getElementById('assign-error');
+    errorBox.style.display = 'none';
+    errorBox.textContent = '';
+
     fetch('/acts/add-all-works', {
         method: 'POST',
         headers: {
@@ -363,10 +394,25 @@ function addAllWorks() {
             act_id: selectedActId
         })
     })
-    .then(response => response.json())
+    .then(async response => {
+        const data = await response.json();
+
+        if (!response.ok || data.success === false) {
+            throw data;
+        }
+
+        return data;
+    })
     .then(data => {
         if (selectedActData) {
             loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, 1);
+        }
+    })
+    .catch(error => {
+        errorBox.textContent = error.message ?? 'Some works could not be assigned.';
+        errorBox.style.display = 'block';
+        if (selectedActData) {
+            loadActWorks(selectedActData.actId, selectedActData.partnerId, selectedActData.actDate, currentPage, assignedSearchTerm);
         }
     });
 }
