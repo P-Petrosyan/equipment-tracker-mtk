@@ -18,7 +18,8 @@
             </div>
             <button type="submit" class="btn btn-sm btn-primary">Ցույց տալ</button>
             <div style="margin-left: auto;">
-                <a href="{{ route('reference.trilateral', ['start_date' => $startDate, 'end_date' => $endDate]) }}" class="btn btn-sm btn-info" style="margin-right: 5px" target="_blank">ՍՉԱՄ Եռակողմ</a>
+                <a href="{{ route('reference.trilateral', ['start_date' => $startDate, 'end_date' => $endDate]) }}" class="btn btn-sm btn-info" style="margin-right: 5px" target="_blank">ՍՉԱՄ PDF</a>
+                <a href="{{ route('reference.trilateral.word', ['start_date' => $startDate, 'end_date' => $endDate]) }}" class="btn btn-sm btn-success" style="margin-right: 5px" target="_blank">ՍՉԱՄ Word</a>
                 <a href="{{ route('reference.export-products-by-regions', ['start_date' => $startDate, 'end_date' => $endDate]) }}" class="btn btn-sm btn-secondary" target="_blank">Դետալների ծախս</a>
             </div>
         </form>
