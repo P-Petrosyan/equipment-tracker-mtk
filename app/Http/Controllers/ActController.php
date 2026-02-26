@@ -114,7 +114,9 @@ class ActController extends Controller
         if (!empty($work->new_serial_number)) {
 
             $alreadyAssigned = Work::where('new_serial_number', $work->new_serial_number)
-                ->whereHas('acts') // assumes Work has acts() relationship
+                ->whereHas('acts', function($query) use ($request) {
+                    $query->where('acts.id', $request->act_id);
+                })
                 ->exists();
 
             if ($alreadyAssigned) {
