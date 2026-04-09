@@ -23,7 +23,7 @@ class TrilateralExcelExport implements FromArray
             ->get();
 
         $data = [];
-        $data[] = ['ՍՉԱՄ Եռակողմ ակտ - ' . $this->startDate . ' - ' . $this->endDate];
+        $data[] = ['ՍՉԱՄ Սերիական համարնենր - ' . $this->startDate . ' - ' . $this->endDate];
         $data[] = ['Գործընկեր', 'Սարքի անվանում', 'Նոր սերիական համար'];
         $data[] = [];
 
