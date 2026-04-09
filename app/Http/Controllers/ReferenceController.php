@@ -147,6 +147,14 @@ class ReferenceController extends Controller
 
         return Excel::download(new \App\Exports\ProductsByRegionsExport($startDate, $endDate), 'Դետալների ծախս ընդհանուր ' . now()->format('d-m-y') . '.xlsx');
     }
+    public function trilateralExcel(Request $request)
+    {
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+
+        return Excel::download(new \App\Exports\TrilateralExcelExport($startDate, $endDate), 'ՍՉԱՄ Եռակողմ ակտ ' . \Carbon\Carbon::parse($endDate)->format('d.m.Y') . '.xlsx');
+    }
+
     public function trilateralWord(Request $request)
     {
         $startDate = $request->get('start_date');
