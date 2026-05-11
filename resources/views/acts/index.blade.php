@@ -288,27 +288,24 @@ function updatePagination(pagination) {
     }
 
     paginationDiv.style.display = 'block';
-    let html = '<div style="display: flex; gap: 5px; justify-content: center; align-items: center;">';
+    let html = '<div style="display: flex; justify-content: center; align-items: center; gap: 10px;">';
 
     // Previous button
     if (pagination.current_page > 1) {
-        html += `<button onclick="changePage(${pagination.current_page - 1})" class="btn btn-sm btn-secondary">Նախորդ</button>`;
+        html += `<button onclick="changePage(${pagination.current_page - 1})" class="btn btn-sm btn-secondary">Previous</button>`;
+    } else {
+        html += `<span class="btn btn-sm" style="background: #f9f9f9; color: #999; border: 1px solid #ddd;">Previous</span>`;
     }
 
-    // Page numbers
-    for (let i = 1; i <= pagination.last_page; i++) {
-        if (i === pagination.current_page) {
-            html += `<button class="btn btn-sm btn-primary" disabled>${i}</button>`;
-        } else {
-            html += `<button onclick="changePage(${i})" class="btn btn-sm btn-secondary">${i}</button>`;
-        }
-    }
+    // Page info
+    html += `<span style="padding: 8px 12px; color: #666;">Page ${pagination.current_page} of ${pagination.last_page} (${pagination.total} total)</span>`;
 
     // Next button
     if (pagination.current_page < pagination.last_page) {
-        html += `<button onclick="changePage(${pagination.current_page + 1})" class="btn btn-sm btn-secondary">Հաջորդ</button>`;
+        html += `<button onclick="changePage(${pagination.current_page + 1})" class="btn btn-sm btn-secondary">Next</button>`;
+    } else {
+        html += `<span class="btn btn-sm" style="background: #f9f9f9; color: #999; border: 1px solid #ddd;">Next</span>`;
     }
-    html += `<span class="btn btn-sm">${pagination.total}</span>`
 
     html += '</div>';
     paginationDiv.innerHTML = html;
