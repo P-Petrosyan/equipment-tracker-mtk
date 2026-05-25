@@ -86,21 +86,25 @@ class WorkController extends Controller
         if ($validated['equipment_part_group_id']) {
             $group = EquipmentPartGroup::with('parts')->find($validated['equipment_part_group_id']);
             if ($group) {
-                // Validate part availability first
+                // First validate group quantity availability
+                if (!is_numeric($group->notes) || $group->notes <= 0) {
+                    return back()->withErrors(['group_error' => 'Անբավարար կարգի քանակություն.'])->withInput();
+                }
+
+                // Then validate part availability
                 $insufficientParts = $this->validatePartAvailability($group);
                 if ($insufficientParts) {
                     return back()->withErrors(['parts_error' => $insufficientParts])->withInput();
                 }
 
-                if (is_numeric($group->notes) && $group->notes > 0) {
-                    $group->decrement('notes');
+                // Only decrement after all validations pass
+                $group->decrement('notes');
 
-                    // Update parts quantities
-                    foreach ($group->parts as $part) {
-                        $pivotQuantity = $part->pivot->quantity;
-                        $part->decrement('quantity', $pivotQuantity);
-                        $part->increment('used_quantity', $pivotQuantity);
-                    }
+                // Update parts quantities
+                foreach ($group->parts as $part) {
+                    $pivotQuantity = $part->pivot->quantity;
+                    $part->decrement('quantity', $pivotQuantity);
+                    $part->increment('used_quantity', $pivotQuantity);
                 }
             }
         }
@@ -137,6 +141,12 @@ class WorkController extends Controller
         if ($oldGroupId != $newGroupId && $newGroupId) {
             $newGroup = EquipmentPartGroup::with('parts')->find($newGroupId);
             if ($newGroup) {
+                // First validate group quantity availability
+                if (!is_numeric($newGroup->notes) || $newGroup->notes <= 0) {
+                    return back()->withErrors(['group_error' => 'Insufficient group quantity available.'])->withInput();
+                }
+
+                // Then validate part availability
                 $insufficientParts = $this->validatePartAvailability($newGroup);
                 if ($insufficientParts) {
                     return back()->withErrors(['parts_error' => $insufficientParts])->withInput();
